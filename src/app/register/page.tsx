@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -8,10 +7,10 @@ export default function RegisterPage() {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("SUBMIT TRIGGERED");
 
     try {
       const response = await api.post('/auth/register', {
@@ -20,64 +19,62 @@ export default function RegisterPage() {
         name,
       });
 
-      setMessage('Inscription réussie 🎉');
-      console.log(response.data);
-    } catch (error: any) {
-      console.error(error);
-      setMessage('Erreur lors de l’inscription');
+      console.log("SUCCESS:", response.data);
+      alert("Inscription réussie !");
+    } catch (error) {
+      console.error("ERROR:", error);
+      alert("Erreur lors de l'inscription");
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-8 rounded shadow-md w-full max-w-md"
+    <div style={{ padding: 40 }}>
+      <h1>Inscription</h1>
+
+      {/* Test bouton */}
+      <button
+        type="button"
+        onClick={() => console.log("CLICK WORKS")}
+        style={{ marginBottom: 20 }}
       >
-        <h2 className="text-2xl font-bold mb-6 text-center">
-          Inscription
-        </h2>
+        Test Click
+      </button>
 
-        <input
-          type="text"
-          placeholder="Nom"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full mb-4 p-2 border rounded"
-          required
-        />
+      <form onSubmit={handleSubmit}>
+        <div>
+          <input
+            type="text"
+            placeholder="Nom"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
 
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full mb-4 p-2 border rounded"
-          required
-        />
+        <div>
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
 
-        <input
-          type="password"
-          placeholder="Mot de passe"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full mb-4 p-2 border rounded"
-          required
-        />
+        <div>
+          <input
+            type="password"
+            placeholder="Mot de passe"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
 
-        <button
-          type="submit"
-          className="w-full bg-indigo-600 text-white p-2 rounded hover:bg-indigo-700"
-        >
-          S’inscrire
+        <button type="submit" style={{ marginTop: 20 }}>
+          S'inscrire
         </button>
-
-        {message && (
-          <p className="mt-4 text-center text-red-500">
-            {message}
-          </p>
-        )}
       </form>
     </div>
   );
 }
+
+
+
