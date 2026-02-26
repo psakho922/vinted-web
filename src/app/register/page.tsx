@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -9,23 +10,7 @@ export default function RegisterPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/register`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email, password }),
-        }
-      );
-
-      const data = await res.json();
-      alert(JSON.stringify(data));
-    } catch (error) {
-      alert("Erreur lors de l'inscription");
-    }
+    alert("API URL: " + process.env.NEXT_PUBLIC_API_URL);
   }
 
   return (
