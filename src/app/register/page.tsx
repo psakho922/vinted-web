@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -10,7 +9,24 @@ export default function RegisterPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    alert("API URL: " + process.env.NEXT_PUBLIC_API_URL);
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        }
+      );
+
+      const data = await res.json();
+
+      alert("Status: " + res.status + " | Response: " + JSON.stringify(data));
+    } catch (error) {
+      alert("Erreur réseau ou serveur");
+    }
   }
 
   return (
@@ -49,3 +65,4 @@ export default function RegisterPage() {
     </div>
   );
 }
+
