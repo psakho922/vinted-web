@@ -2,32 +2,39 @@
 
 import { useState } from "react";
 
-export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+export default function SellPage() {
+  const [title, setTitle] = useState("");
+  const [price, setPrice] = useState("");
+  const [image, setImage] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
+    const token = localStorage.getItem("token");
+
     try {
       const res = await fetch(
-        process.env.NEXT_PUBLIC_API_URL + "/auth/login",
+        process.env.NEXT_PUBLIC_API_URL + "/products",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ email, password }),
+          body: JSON.stringify({
+            title,
+            price,
+            image,
+            userId: JSON.parse(atob(token!.split(".")[1])).sub,
+          }),
         }
       );
 
-      const data = await res.json();
-
       if (res.ok) {
-        localStorage.setItem("token", data.access_token);
+        alert("Produit créé !");
         window.location.href = "/";
       } else {
-        alert(data.message || "Erreur login");
+        alert("Erreur création produit");
       }
     } catch (err) {
       console.error(err);
@@ -37,32 +44,37 @@ export default function LoginPage() {
 
   return (
     <div style={{ padding: "40px" }}>
-      <h2>Login</h2>
+      <h2>Vendre un produit</h2>
 
       <form onSubmit={handleSubmit}>
         <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Titre"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
           required
         />
 
-        <br />
-        <br />
+        <br /><br />
 
         <input
-          type="password"
-          placeholder="Mot de passe"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Prix"
+          value={price}
+          onChange={(e) => setPrice(e.target.value)}
           required
         />
 
-        <br />
-        <br />
+        <br /><br />
 
-        <button type="submit">Se connecter</button>
+        <input
+          placeholder="URL image"
+          value={image}
+          onChange={(e) => setImage(e.target.value)}
+          required
+        />
+
+        <br /><br />
+
+        <button type="submit">Créer</button>
       </form>
     </div>
   );
