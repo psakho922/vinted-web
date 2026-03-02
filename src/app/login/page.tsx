@@ -3,7 +3,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 
   try {
     const res = await fetch(
-      ${process.env.NEXT_PUBLIC_API_URL}/auth/login,
+      `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
       {
         method: "POST",
         headers: {
@@ -19,12 +19,8 @@ const handleSubmit = async (e: React.FormEvent) => {
     const data = await res.json();
 
     if (res.ok) {
-      // 🔥 Sauvegarde le token
       localStorage.setItem("token", data.access_token);
-
       alert("Login successful");
-
-      // recharge la page pour mettre à jour la navbar
       window.location.reload();
     } else {
       alert(data.message || "Erreur login");
