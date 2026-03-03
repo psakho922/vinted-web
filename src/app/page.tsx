@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 export default function HomePage() {
   const [products, setProducts] = useState<any[]>([]);
@@ -20,6 +21,11 @@ export default function HomePage() {
 
   async function handleDelete(id: string) {
     const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("Tu dois être connecté");
+      return;
+    }
 
     const res = await fetch(
       process.env.NEXT_PUBLIC_API_URL + "/products/" + id,
@@ -54,8 +60,14 @@ export default function HomePage() {
             marginBottom: 20,
           }}
         >
-          <h3>{product.title}</h3>
+          <h3>
+            <Link href={`/product/${product.id}`}>
+              {product.title}
+            </Link>
+          </h3>
+
           <p>{product.price} FCFA</p>
+
           <img src={product.image} width="200" />
 
           <br />
