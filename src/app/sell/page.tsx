@@ -5,87 +5,81 @@ import { useState } from "react";
 export default function SellPage() {
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
-  const [image, setImage] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [message, setMessage] = useState("");
 
-  async function handleSubmit(e: React.FormEvent) {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
-
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      alert("Tu dois être connecté");
-      return;
-    }
-
-    // 🔥 On récupère userId du token correctement
-    const decoded = JSON.parse(atob(token.split(".")[1]));
-    const userId = decoded.userId;
 
     try {
       const res = await fetch(
-        process.env.NEXT_PUBLIC_API_URL + "/products",
+        `${process.env.NEXT_PUBLIC_API_URL}/products`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
           body: JSON.stringify({
             title,
             price: Number(price),
-            image,
-            userId,
+            imageUrl,
           }),
         }
       );
 
-      if (res.ok) {
-        alert("Produit créé !");
-        window.location.href = "/";
-      } else {
-        const errorText = await res.text();
-        console.log(errorText);
-        alert("Erreur création produit");
+      if (!res.ok) {
+        throw new Error("Erreur création produit");
       }
-    } catch (err) {
-      console.error(err);
-      alert("Erreur serveur");
+
+      setMessage("Produit créé avec succès !");
+      setTitle("");
+      setPrice("");
+      setImageUrl("");
+    } catch (error) {
+      setMessage("Erreur création produit");
     }
-  }
+  };
 
   return (
-    <div style={{ padding: "40px" }}>
-      <h2>Vendre un produit</h2>
+    <div style={{ padding: "20px" }}>
+      <h1>Vendre un produit</h1>
 
       <form onSubmit={handleSubmit}>
-        <input
-          placeholder="Titre"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-        />
+        <div>
+          <input
+            type="text"
+            placeholder="Titre"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+          />
+        </div>
 
-        <br /><br />
+        <div>
+          <input
+            type="number"
+            placeholder="Prix"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            required
+          />
+        </div>
 
-        <input
-          placeholder="Prix"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-          required
-        />
-
-        <br /><br />
-
-        <input
-          placeholder="URL image"
-          value={image}
-          onChange={(e) => setImage(e.target.value)}
-          required
-        />
-
-        <br /><br />
+        <div>
+          <input
+            type="text"
+            placeholder="URL image"
+            value={imageUrl}
+            onChange={(e) => setImageUrl(e.target.value)}
+            required
+          />
+        </div>
 
         <button type="submit">Créer</button>
       </form>
+
+      {message && <p>{message}</p>}
     </div>
   );
 }
