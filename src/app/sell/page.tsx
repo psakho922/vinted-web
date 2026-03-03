@@ -2,69 +2,80 @@
 
 import { useState } from "react";
 
-export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
+export default function SellPage() {
+  const [title, setTitle] = useState("");
+  const [price, setPrice] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
 
-  const handleLogin = async (e: React.FormEvent) => {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            password,
-          }),
-        }
-      );
+    const token = localStorage.getItem("token");
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error("Erreur login");
-      }
-
-      localStorage.setItem("token", data.access_token);
-
-      setMessage("Login réussi !");
-      window.location.href = "/sell";
-    } catch (error) {
-      setMessage("Erreur login");
+    if (!token) {
+      alert("Tu dois être connecté");
+      return;
     }
-  };
+
+    const res = await fetch(
+      process.env.NEXT_PUBLIC_API_URL + "/products",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({
+          title,
+          price: Number(price),
+          imageUrl,
+        }),
+      }
+    );
+
+    if (res.ok) {
+      alert("Produit créé !");
+      window.location.href = "/";
+    } else {
+      alert("Erreur création produit");
+    }
+  }
 
   return (
-    <div style={{ padding: 20 }}>
-      <h1>Login</h1>
+    <div style={{ padding: "40px" }}>
+      <h2>Vendre un produit</h2>
 
-      <form onSubmit={handleLogin}>
+      <form onSubmit={handleSubmit}>
         <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Titre"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
           required
         />
 
+        <br /><br />
+
         <input
-          type="password"
-          placeholder="Mot de passe"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          type="number"
+          placeholder="Prix"
+          value={price}
+          onChange={(e) => setPrice(e.target.value)}
           required
         />
 
-        <button type="submit">Se connecter</button>
+        <br /><br />
+
+        <input
+          placeholder="URL image"
+          value={imageUrl}
+          onChange={(e) => setImageUrl(e.target.value)}
+          required
+        />
+
+        <br /><br />
+
+        <button type="submit">Créer</button>
       </form>
-
-      {message && <p>{message}</p>}
     </div>
   );
 }
