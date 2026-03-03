@@ -4,20 +4,22 @@ import { useEffect, useState } from "react";
 
 export default function HomePage() {
   const [products, setProducts] = useState<any[]>([]);
+  const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
     fetch(process.env.NEXT_PUBLIC_API_URL + "/products")
       .then((res) => res.json())
       .then((data) => setProducts(data));
+
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decoded: any = JSON.parse(atob(token.split(".")[1]));
+      setUserId(decoded.userId);
+    }
   }, []);
 
   async function handleDelete(id: string) {
     const token = localStorage.getItem("token");
-
-    if (!token) {
-      alert("Tu dois être connecté");
-      return;
-    }
 
     const res = await fetch(
       process.env.NEXT_PUBLIC_API_URL + "/products/" + id,
@@ -59,9 +61,11 @@ export default function HomePage() {
           <br />
           <br />
 
-          <button onClick={() => handleDelete(product.id)}>
-            Supprimer
-          </button>
+          {userId === product.userId && (
+            <button onClick={() => handleDelete(product.id)}>
+              Supprimer
+            </button>
+          )}
         </div>
       ))}
     </div>
