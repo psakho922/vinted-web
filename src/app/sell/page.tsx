@@ -5,7 +5,7 @@ import { useState } from "react";
 export default function SellPage() {
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
+  const [image, setImage] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -17,9 +17,6 @@ export default function SellPage() {
       return;
     }
 
-    const payload = JSON.parse(atob(token.split(".")[1]));
-    const userId = payload.userId;
-
     try {
       const res = await fetch(
         process.env.NEXT_PUBLIC_API_URL + "/products",
@@ -27,13 +24,12 @@ export default function SellPage() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: "Bearer " + token,
           },
           body: JSON.stringify({
             title,
             price: Number(price),
-            imageUrl,
-            userId,
+            image,
           }),
         }
       );
@@ -44,7 +40,7 @@ export default function SellPage() {
 
       alert("Produit créé !");
       window.location.href = "/";
-    } catch (error) {
+    } catch (err) {
       alert("Erreur création produit");
     }
   }
@@ -75,8 +71,8 @@ export default function SellPage() {
 
         <input
           placeholder="URL image"
-          value={imageUrl}
-          onChange={(e) => setImageUrl(e.target.value)}
+          value={image}
+          onChange={(e) => setImage(e.target.value)}
           required
         />
 
