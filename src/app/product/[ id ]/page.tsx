@@ -5,17 +5,20 @@ import { useParams } from "next/navigation";
 
 export default function ProductPage() {
   const params = useParams();
-  const id = params.id as string;
+  const id = params?.id as string;
 
   const [product, setProduct] = useState<any>(null);
 
   useEffect(() => {
-    fetch(process.env.NEXT_PUBLIC_API_URL + "/products")
-      .then((res) => res.json())
-      .then((data) => {
-        const found = data.find((p: any) => p.id === id);
-        setProduct(found);
-      });
+    if (!id) return;
+
+    fetch(process.env.NEXT_PUBLIC_API_URL + "/products/" + id)
+      .then((res) => {
+        if (!res.ok) throw new Error("Produit introuvable");
+        return res.json();
+      })
+      .then((data) => setProduct(data))
+      .catch(() => setProduct(null));
   }, [id]);
 
   if (!product) return <p>Chargement...</p>;
