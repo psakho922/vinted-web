@@ -17,29 +17,38 @@ export default function SellPage() {
       return;
     }
 
-    const userId = JSON.parse(atob(token.split(".")[1])).sub;
+    // 🔥 On récupère userId du token correctement
+    const decoded = JSON.parse(atob(token.split(".")[1]));
+    const userId = decoded.userId;
 
-    const res = await fetch(
-      process.env.NEXT_PUBLIC_API_URL + "/products",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title,
-          price,
-          image,
-          userId,
-        }),
+    try {
+      const res = await fetch(
+        process.env.NEXT_PUBLIC_API_URL + "/products",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title,
+            price: Number(price),
+            image,
+            userId,
+          }),
+        }
+      );
+
+      if (res.ok) {
+        alert("Produit créé !");
+        window.location.href = "/";
+      } else {
+        const errorText = await res.text();
+        console.log(errorText);
+        alert("Erreur création produit");
       }
-    );
-
-    if (res.ok) {
-      alert("Produit créé !");
-      window.location.href = "/";
-    } else {
-      alert("Erreur création produit");
+    } catch (err) {
+      console.error(err);
+      alert("Erreur serveur");
     }
   }
 
