@@ -1,35 +1,18 @@
-"use client";
+export default async function ProductPage({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const res = await fetch(
+    process.env.NEXT_PUBLIC_API_URL + "/products/" + params.id,
+    { cache: "no-store" }
+  );
 
-import { useEffect, useState } from "react";
+  if (!res.ok) {
+    return <p>Produit introuvable</p>;
+  }
 
-export default function ProductPage({ params }: { params: { id: string } }) {
-  const { id } = params;
-
-  const [product, setProduct] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchProduct() {
-      try {
-        const res = await fetch(
-          process.env.NEXT_PUBLIC_API_URL + "/products/" + id
-        );
-
-        const data = await res.json();
-        setProduct(data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchProduct();
-  }, [id]);
-
-  if (loading) return <p>Chargement...</p>;
-
-  if (!product) return <p>Produit introuvable</p>;
+  const product = await res.json();
 
   return (
     <div style={{ padding: 40 }}>
