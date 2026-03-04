@@ -12,29 +12,38 @@ export default function ProductPage() {
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/${id}`)
       .then((res) => res.json())
-      .then((data) => setProduct(data));
+      .then((data) => setProduct(data))
+      .catch(() => setProduct(null));
   }, [id]);
 
-  if (!product) return <p>Chargement...</p>;
+  if (!product) {
+    return <p>Chargement...</p>;
+  }
 
   return (
-    <div style={{ padding: 40 }}>
+    <div style={{ padding: "40px" }}>
       <h1>{product.title}</h1>
+
       <p>{product.price} FCFA</p>
 
-      <img src={product.image} width="400" />
+      <img
+        src={product.image}
+        alt={product.title}
+        width="400"
+      />
 
       <br />
       <br />
 
       <button
-        onClick={() => alert("Fonction achat bientôt disponible")}
+        onClick={() => alert("Paiement bientôt disponible")}
         style={{
           padding: "12px 20px",
           backgroundColor: "black",
           color: "white",
           border: "none",
           cursor: "pointer",
+          fontSize: "16px"
         }}
       >
         Acheter
