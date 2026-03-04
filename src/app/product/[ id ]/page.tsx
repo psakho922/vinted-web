@@ -4,7 +4,7 @@ export default async function ProductPage({
   params: { id: string };
 }) {
   const res = await fetch(
-    process.env.NEXT_PUBLIC_API_URL + "/products/" + params.id,
+    "https://vinted-api-clean.onrender.com/products/" + params.id,
     { cache: "no-store" }
   );
 
