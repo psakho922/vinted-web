@@ -1,18 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
 
-export default function ProductPage() {
-  const params = useParams();
-  const id = params?.id as string;
+export default function ProductPage({ params }: { params: { id: string } }) {
+  const { id } = params;
 
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!id) return;
-
     async function fetchProduct() {
       try {
         const res = await fetch(
@@ -21,8 +17,8 @@ export default function ProductPage() {
 
         const data = await res.json();
         setProduct(data);
-      } catch (err) {
-        console.error(err);
+      } catch (error) {
+        console.error(error);
       } finally {
         setLoading(false);
       }
