@@ -1,4 +1,4 @@
- "use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
@@ -17,49 +17,28 @@ export default function ProductPage() {
 
   if (!product) return <p>Chargement...</p>;
 
-return (
-  <div style={{ padding: 40 }}>
-    <h1>{product.title}</h1>
+  return (
+    <div style={{ padding: 40 }}>
+      <h1>{product.title}</h1>
+      <p>{product.price} FCFA</p>
 
-    <p>{product.price} FCFA</p>
+      <img src={product.image} width="400" />
 
-    <img src={product.image} width="400" />
+      <br />
+      <br />
 
-    <br /><br />
-
-    <button
-      onClick={() => alert("Fonction achat bientôt disponible")}
-      style={{
-        padding: "12px 20px",
-        backgroundColor: "black",
-        color: "white",
-        border: "none",
-        cursor: "pointer"
-      }}
-    >
-      Acheter
-    </button>
- return (
-  <div style={{ padding: 40 }}>
-    <h1>{product.title}</h1>
-
-    <p>{product.price} FCFA</p>
-
-    <img src={product.image} width="400" />
-
-    <br /><br />
-
-    <button
-      onClick={() => alert("Fonction achat bientôt disponible")}
-      style={{
-        padding: "12px 20px",
-        backgroundColor: "black",
-        color: "white",
-        border: "none",
-        cursor: "pointer"
-      }}
-    >
-      Acheter
-    </button>
-  </div>
-);
+      <button
+        onClick={() => alert("Fonction achat bientôt disponible")}
+        style={{
+          padding: "12px 20px",
+          backgroundColor: "black",
+          color: "white",
+          border: "none",
+          cursor: "pointer",
+        }}
+      >
+        Acheter
+      </button>
+    </div>
+  );
+}
