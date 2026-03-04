@@ -7,7 +7,24 @@ export default function SellPage() {
   const [price, setPrice] = useState("");
   const [image, setImage] = useState("");
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function uploadImage(file: File) {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "vinted_upload");
+
+    const res = await fetch(
+      "https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    const data = await res.json();
+    return data.secure_url;
+  }
+
+  async function handleSubmit(e: any) {
     e.preventDefault();
 
     const token = localStorage.getItem("token");
@@ -17,36 +34,40 @@ export default function SellPage() {
       return;
     }
 
-    try {
-      const res = await fetch(
-        process.env.NEXT_PUBLIC_API_URL + "/products",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token,
-          },
-          body: JSON.stringify({
-            title,
-            price: Number(price),
-            image,
-          }),
-        }
-      );
+    const userId = JSON.parse(atob(token.split(".")[1])).sub;
 
-      if (!res.ok) {
-        throw new Error("Erreur serveur");
+    const res = await fetch(
+      process.env.NEXT_PUBLIC_API_URL + "/products",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title,
+          price,
+          image,
+          userId,
+        }),
       }
+    );
 
+    if (res.ok) {
       alert("Produit créé !");
       window.location.href = "/";
-    } catch (err) {
+    } else {
       alert("Erreur création produit");
     }
   }
 
+  async function handleFile(e: any) {
+    const file = e.target.files[0];
+    const url = await uploadImage(file);
+    setImage(url);
+  }
+
   return (
-    <div style={{ padding: "40px" }}>
+    <div style={{ padding: 40 }}>
       <h2>Vendre un produit</h2>
 
       <form onSubmit={handleSubmit}>
@@ -60,7 +81,6 @@ export default function SellPage() {
         <br /><br />
 
         <input
-          type="number"
           placeholder="Prix"
           value={price}
           onChange={(e) => setPrice(e.target.value)}
@@ -70,15 +90,19 @@ export default function SellPage() {
         <br /><br />
 
         <input
-          placeholder="URL image"
-          value={image}
-          onChange={(e) => setImage(e.target.value)}
-          required
+          type="file"
+          onChange={handleFile}
         />
 
         <br /><br />
 
-        <button type="submit">Créer</button>
+        {image && <img src={image} width="200" />}
+
+        <br /><br />
+
+        <button type="submit">
+          Créer produit
+        </button>
       </form>
     </div>
   );
