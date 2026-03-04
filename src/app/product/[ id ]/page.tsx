@@ -1,18 +1,42 @@
-export default async function ProductPage({
+"use client";
+
+import { useEffect, useState } from "react";
+
+export default function ProductPage({
   params,
 }: {
   params: { id: string };
 }) {
-  const res = await fetch(
-    "https://vinted-api-clean.onrender.com/products/" + params.id,
-    { cache: "no-store" }
-  );
+  const { id } = params;
 
-  if (!res.ok) {
-    return <p>Produit introuvable</p>;
-  }
+  const [product, setProduct] = useState<any>(null);
+  const [error, setError] = useState(false);
 
-  const product = await res.json();
+  useEffect(() => {
+    async function fetchProduct() {
+      try {
+        const res = await fetch(
+          "https://vinted-api-clean.onrender.com/products/" + id
+        );
+
+        if (!res.ok) {
+          setError(true);
+          return;
+        }
+
+        const data = await res.json();
+        setProduct(data);
+      } catch (err) {
+        console.error(err);
+        setError(true);
+      }
+    }
+
+    fetchProduct();
+  }, [id]);
+
+  if (error) return <p>Erreur chargement produit</p>;
+  if (!product) return <p>Chargement...</p>;
 
   return (
     <div style={{ padding: 40 }}>
