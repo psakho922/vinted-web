@@ -8,20 +8,32 @@ export default function ProductPage() {
   const id = params?.id as string;
 
   const [product, setProduct] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!id) return;
 
-    fetch(process.env.NEXT_PUBLIC_API_URL + "/products/" + id)
-      .then((res) => {
-        if (!res.ok) throw new Error("Produit introuvable");
-        return res.json();
-      })
-      .then((data) => setProduct(data))
-      .catch(() => setProduct(null));
+    async function fetchProduct() {
+      try {
+        const res = await fetch(
+          process.env.NEXT_PUBLIC_API_URL + "/products/" + id
+        );
+
+        const data = await res.json();
+        setProduct(data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchProduct();
   }, [id]);
 
-  if (!product) return <p>Chargement...</p>;
+  if (loading) return <p>Chargement...</p>;
+
+  if (!product) return <p>Produit introuvable</p>;
 
   return (
     <div style={{ padding: 40 }}>
