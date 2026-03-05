@@ -112,9 +112,7 @@ export default function SellPage() {
         <br /><br />
 
         <button type="submit">
-
           {loading ? "Création..." : "Créer produit"}
-
         </button>
 
       </form>
