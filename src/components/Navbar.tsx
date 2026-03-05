@@ -6,27 +6,30 @@ export default function Navbar() {
 
   return (
 
-    <div
-      style={{
-        display: "flex",
-        gap: 20,
-        padding: 20,
-        borderBottom: "1px solid #ddd"
-      }}
-    >
+    <div style={{
+      padding:20,
+      borderBottom:"1px solid #ccc",
+      display:"flex",
+      gap:20
+    }}>
 
-      <Link href="/">Home</Link>
+      <Link href="/">
+        Home
+      </Link>
 
-      <Link href="/sell">Sell</Link>
+      <Link href="/sell">
+        Sell
+      </Link>
 
-      <Link href="/panier">Panier 🛒</Link>
+      <Link href="/panier">
+        Panier
+      </Link>
 
-      <Link href="/login">Login</Link>
-
-      <Link href="/register">Register</Link>
+      <Link href="/profile">
+        Profil
+      </Link>
 
     </div>
 
   );
-
 }
