@@ -30,6 +30,12 @@ export default function PanierPage() {
 
   }
 
+  function payCart(){
+
+    window.location.href = "/acheter";
+
+  }
+
   return (
 
     <div style={{padding:40}}>
@@ -42,13 +48,18 @@ export default function PanierPage() {
 
         <div key={index} style={{marginBottom:30}}>
 
-          <img src={product.image} width="200"/>
+          <img
+            src={product.image}
+            width="200"
+          />
 
           <h3>{product.title}</h3>
 
           <p>{product.price} FCFA</p>
 
-          <button onClick={()=>removeItem(index)}>
+          <button
+            onClick={()=>removeItem(index)}
+          >
             Supprimer
           </button>
 
@@ -57,6 +68,21 @@ export default function PanierPage() {
       ))}
 
       <h2>Total : {total} FCFA</h2>
+
+      <br/>
+
+      <button
+        onClick={payCart}
+        style={{
+          padding:12,
+          background:"green",
+          color:"white",
+          border:"none",
+          fontSize:18
+        }}
+      >
+        Payer le panier
+      </button>
 
     </div>
 
