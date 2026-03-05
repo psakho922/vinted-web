@@ -5,51 +5,61 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 
 export default function ProductPage() {
+
   const params = useParams();
   const id = params.id as string;
 
   const [product, setProduct] = useState<any>(null);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/${id}`)
-      .then((res) => res.json())
-      .then((data) => setProduct(data))
-      .catch(() => setProduct(null));
+
+    fetch(process.env.NEXT_PUBLIC_API_URL + "/products")
+      .then(res => res.json())
+      .then(data => {
+
+        const found = data.find((p:any) => p.id === id);
+        setProduct(found);
+
+      });
+
   }, [id]);
 
-  if (!product) {
-    return <p>Chargement...</p>;
-  }
+  if (!product) return <p>Chargement...</p>;
 
   return (
-    <div style={{ padding: 40 }}>
-      <h1>{product.title}</h1>
 
-      <p>{product.price} FCFA</p>
+    <div style={{ padding: 40 }}>
+
+      <h1>{product.title}</h1>
 
       <img
         src={product.image}
-        alt={product.title}
-        width="400"
+        style={{
+          width: 400,
+          marginTop: 20,
+          borderRadius: 10
+        }}
       />
 
-      <br />
+      <p style={{ fontSize: 22, marginTop: 20 }}>
+        {product.price} FCFA
+      </p>
+
       <br />
 
-      <Link href="/acheter">
-        <button
-          style={{
-            padding: "12px 20px",
-            backgroundColor: "black",
-            color: "white",
-            border: "none",
-            cursor: "pointer",
-            fontSize: "16px"
-          }}
-        >
-          Acheter
-        </button>
+      <Link
+        href={"/seller/" + product.userId}
+        style={{
+          color: "blue",
+          textDecoration: "underline",
+          fontSize: 18
+        }}
+      >
+        Voir profil vendeur
       </Link>
+
     </div>
+
   );
+
 }
