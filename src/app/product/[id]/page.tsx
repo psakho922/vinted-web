@@ -9,67 +9,64 @@ export default function ProductPage() {
   const params = useParams();
   const id = params.id as string;
 
-  const [product,setProduct] = useState<any>(null);
+  const [product, setProduct] = useState<any>(null);
 
-  useEffect(()=>{
+  useEffect(() => {
 
     fetch(process.env.NEXT_PUBLIC_API_URL + "/products")
-    .then(res=>res.json())
-    .then(data=>{
+      .then(res => res.json())
+      .then(data => {
 
-      const found = data.find((p:any)=>p.id === id);
-      setProduct(found);
+        const found = data.find((p: any) => p.id === id);
+        setProduct(found);
 
-    });
+      });
 
-  },[id]);
+  }, [id]);
 
-  if(!product){
-    return <p>Chargement...</p>;
-  }
+  if (!product) return <p>Chargement...</p>;
 
-  return(
+  return (
 
-    <div style={{padding:40}}>
+    <div style={{ padding: 40 }}>
 
       <h1>{product.title}</h1>
 
       <img
         src={product.image}
         style={{
-          width:400,
-          marginTop:20,
-          borderRadius:10
+          width: 400,
+          borderRadius: 10,
+          marginTop: 20
         }}
       />
 
-      <p style={{fontSize:22}}>
+      <p style={{ fontSize: 22 }}>
         {product.price} FCFA
       </p>
 
-      <br/>
+      <br />
 
       <Link
         href={"/seller/" + product.userId}
         style={{
-          color:"blue",
-          textDecoration:"underline"
+          color: "blue",
+          textDecoration: "underline"
         }}
       >
         Voir profil vendeur
       </Link>
 
-      <br/><br/>
+      <br /><br />
 
       <Link
         href="/acheter"
         style={{
-          background:"#00a884",
-          color:"white",
-          padding:"10px 20px",
-          borderRadius:8,
-          textDecoration:"none",
-          fontWeight:"bold"
+          background: "#00a884",
+          color: "white",
+          padding: "10px 20px",
+          borderRadius: 8,
+          textDecoration: "none"
         }}
       >
         Acheter
