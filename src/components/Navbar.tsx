@@ -1,37 +1,49 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 export default function Navbar() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token);
-  }, []);
+  const token =
+    typeof window !== "undefined"
+      ? localStorage.getItem("token")
+      : null;
 
-  const handleLogout = () => {
+  function logout() {
     localStorage.removeItem("token");
-    setIsLoggedIn(false);
     window.location.href = "/";
-  };
+  }
 
   return (
-    <nav style={{ padding: 20, borderBottom: "1px solid #ccc" }}>
-      <Link href="/">Home</Link>{" "}
-      
-      {isLoggedIn ? (
+    <nav
+      style={{
+        padding: 20,
+        borderBottom: "1px solid #ddd",
+        display: "flex",
+        gap: 20,
+      }}
+    >
+
+      <Link href="/">Home</Link>
+
+      {token ? (
         <>
-          <Link href="/sell">Sell</Link>{" "}
-          <button onClick={handleLogout}>Logout</button>
+          <Link href="/sell">Sell</Link>
+
+          <Link href="/profile">Profil</Link>
+
+          <button onClick={logout}>
+            Logout
+          </button>
         </>
       ) : (
         <>
-          <Link href="/login">Login</Link>{" "}
+          <Link href="/login">Login</Link>
+
           <Link href="/register">Register</Link>
         </>
       )}
+
     </nav>
   );
 }
