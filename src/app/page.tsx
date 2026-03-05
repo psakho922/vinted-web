@@ -1,82 +1,64 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
+import { useState } from "react";
 
-export default function Home() {
+export default function AcheterPage(){
 
-  const [products,setProducts] = useState<any[]>([]);
+  const [method,setMethod] = useState("");
 
-  useEffect(()=>{
+  function payer(){
 
-    fetch(process.env.NEXT_PUBLIC_API_URL + "/products")
-    .then(res=>res.json())
-    .then(data=>setProducts(data));
+    if(!method){
+      alert("Choisissez un moyen de paiement");
+      return;
+    }
 
-  },[]);
+    alert("Paiement simulé avec " + method);
+
+  }
 
   return(
 
     <div style={{padding:40}}>
 
-      <h1>Marketplace</h1>
+      <h1>Paiement</h1>
 
-      {products.length === 0 && (
-        <p>Aucun produit pour le moment</p>
-      )}
+      <p>Choisissez un moyen de paiement :</p>
 
-      <div
+      <br/>
+
+      <button
+        onClick={()=>setMethod("Wave")}
         style={{
-          display:"grid",
-          gridTemplateColumns:"repeat(auto-fill,220px)",
-          gap:30,
-          marginTop:30
+          padding:10,
+          marginRight:10
         }}
       >
+        Wave
+      </button>
 
-        {products.map((p:any)=>(
+      <button
+        onClick={()=>setMethod("Orange Money")}
+        style={{
+          padding:10
+        }}
+      >
+        Orange Money
+      </button>
 
-          <div
-            key={p.id}
-            style={{
-              border:"1px solid #ddd",
-              borderRadius:10,
-              padding:10
-            }}
-          >
+      <br/><br/>
 
-            <img
-              src={p.image}
-              style={{
-                width:"100%",
-                borderRadius:10
-              }}
-            />
-
-            <h3>{p.title}</h3>
-
-            <p style={{fontWeight:"bold"}}>
-              {p.price} FCFA
-            </p>
-
-            <Link
-              href={"/product/" + p.id}
-              style={{
-                background:"#00a884",
-                color:"white",
-                padding:"6px 12px",
-                borderRadius:6,
-                textDecoration:"none"
-              }}
-            >
-              Voir le produit
-            </Link>
-
-          </div>
-
-        ))}
-
-      </div>
+      <button
+        onClick={payer}
+        style={{
+          background:"#00a884",
+          color:"white",
+          padding:"10px 20px",
+          borderRadius:8
+        }}
+      >
+        Payer
+      </button>
 
     </div>
 
