@@ -28,23 +28,20 @@ export default function Home() {
       <div
         style={{
           display:"grid",
-          gridTemplateColumns:"repeat(auto-fill,200px)",
-          gap:20,
+          gridTemplateColumns:"repeat(auto-fill,220px)",
+          gap:30,
           marginTop:30
         }}
       >
 
         {products.map((p:any)=>(
 
-          <Link
+          <div
             key={p.id}
-            href={"/product/" + p.id}
             style={{
               border:"1px solid #ddd",
-              padding:10,
               borderRadius:10,
-              textDecoration:"none",
-              color:"black"
+              padding:10
             }}
           >
 
@@ -58,9 +55,24 @@ export default function Home() {
 
             <h3>{p.title}</h3>
 
-            <p>{p.price} FCFA</p>
+            <p style={{fontWeight:"bold"}}>
+              {p.price} FCFA
+            </p>
 
-          </Link>
+            <Link
+              href={"/product/" + p.id}
+              style={{
+                background:"#00a884",
+                color:"white",
+                padding:"6px 12px",
+                borderRadius:6,
+                textDecoration:"none"
+              }}
+            >
+              Voir le produit
+            </Link>
+
+          </div>
 
         ))}
 
