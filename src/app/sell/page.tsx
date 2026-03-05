@@ -8,15 +8,27 @@ export default function SellPage() {
   const [price, setPrice] = useState("");
   const [image, setImage] = useState("");
 
+  function getToken() {
+
+    const local = localStorage.getItem("token");
+    const session = sessionStorage.getItem("token");
+
+    const cookie = document.cookie
+      .split("; ")
+      .find(row => row.startsWith("token="))
+      ?.split("=")[1];
+
+    return local || session || cookie;
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    const token =
-      localStorage.getItem("token") ||
-      sessionStorage.getItem("token");
+    const token = getToken();
 
     if (!token) {
       alert("Tu dois être connecté");
+      window.location.href = "/login";
       return;
     }
 
