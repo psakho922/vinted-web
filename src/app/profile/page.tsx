@@ -5,30 +5,52 @@ import { useEffect, useState } from "react";
 export default function ProfilePage() {
 
   const [products, setProducts] = useState<any[]>([]);
-  const [userId, setUserId] = useState("");
 
   useEffect(() => {
+    loadProducts();
+  }, []);
+
+  async function loadProducts() {
 
     const token = localStorage.getItem("token");
 
     if (!token) return;
 
     const payload = JSON.parse(atob(token.split(".")[1]));
-    setUserId(payload.userId);
+    const userId = payload.userId;
 
-    fetch(process.env.NEXT_PUBLIC_API_URL + "/products")
-      .then(res => res.json())
-      .then(data => {
+    const res = await fetch(process.env.NEXT_PUBLIC_API_URL + "/products");
+    const data = await res.json();
 
-        const myProducts = data.filter((p:any) => p.userId === payload.userId);
-        setProducts(myProducts);
+    const myProducts = data.filter((p:any) => p.userId === userId);
 
-      });
+    setProducts(myProducts);
+  }
 
-  }, []);
+  async function deleteProduct(id:string) {
+
+    const token = localStorage.getItem("token");
+
+    const res = await fetch(
+      process.env.NEXT_PUBLIC_API_URL + "/products/" + id,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: "Bearer " + token
+        }
+      }
+    );
+
+    if(res.ok){
+      alert("Produit supprimé");
+      loadProducts();
+    } else {
+      alert("Erreur suppression");
+    }
+
+  }
 
   return (
-
     <div style={{ padding: 40 }}>
 
       <h1>Mon profil</h1>
@@ -45,8 +67,8 @@ export default function ProfilePage() {
           key={product.id}
           style={{
             border: "1px solid #ddd",
-            padding: 10,
-            marginTop: 10,
+            padding: 15,
+            marginTop: 15,
             borderRadius: 10
           }}
         >
@@ -57,11 +79,24 @@ export default function ProfilePage() {
 
           <p>{product.price} FCFA</p>
 
+          <button
+            onClick={() => deleteProduct(product.id)}
+            style={{
+              marginTop: 10,
+              background: "red",
+              color: "white",
+              border: "none",
+              padding: 8,
+              borderRadius: 5
+            }}
+          >
+            Supprimer
+          </button>
+
         </div>
 
       ))}
 
     </div>
-
   );
 }
