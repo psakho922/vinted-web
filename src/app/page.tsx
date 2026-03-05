@@ -10,75 +10,83 @@ export default function Home() {
 
   useEffect(() => {
     fetch(process.env.NEXT_PUBLIC_API_URL + "/products")
-      .then((res) => res.json())
-      .then((data) => setProducts(data));
+      .then(res => res.json())
+      .then(data => setProducts(data));
   }, []);
 
-  const filteredProducts = products.filter((product) =>
-    product.title.toLowerCase().includes(search.toLowerCase())
+  const filteredProducts = products.filter(p =>
+    p.title.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
     <div style={{ padding: 40 }}>
 
-      <h1>Marketplace</h1>
+      <h1 style={{ fontSize: 30 }}>Marketplace</h1>
 
       <input
         placeholder="🔎 Rechercher un produit..."
         value={search}
-        onChange={(e) => setSearch(e.target.value)}
+        onChange={(e)=>setSearch(e.target.value)}
         style={{
-          padding: 10,
-          width: "100%",
-          maxWidth: 400,
-          marginTop: 20,
-          marginBottom: 30
+          padding:10,
+          width:"100%",
+          maxWidth:400,
+          marginTop:20,
+          marginBottom:30,
+          borderRadius:8,
+          border:"1px solid #ccc"
         }}
       />
 
-      {filteredProducts.length === 0 && (
-        <p>Aucun produit trouvé</p>
-      )}
-
       <div
         style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, 250px)",
-          gap: 20
+          display:"grid",
+          gridTemplateColumns:"repeat(auto-fill,250px)",
+          gap:25
         }}
       >
 
-        {filteredProducts.map((product) => (
+      {filteredProducts.map(product => (
 
-          <Link
-            key={product.id}
-            href={"/product/" + product.id}
+        <Link
+          key={product.id}
+          href={"/product/" + product.id}
+          style={{
+            textDecoration:"none",
+            color:"black",
+            border:"1px solid #eee",
+            borderRadius:12,
+            overflow:"hidden",
+            boxShadow:"0 4px 10px rgba(0,0,0,0.05)"
+          }}
+        >
+
+          <img
+            src={product.image}
             style={{
-              border: "1px solid #ddd",
-              padding: 10,
-              borderRadius: 10,
-              textDecoration: "none",
-              color: "black"
+              width:"100%",
+              height:220,
+              objectFit:"cover"
             }}
-          >
+          />
 
-            <img
-              src={product.image}
-              style={{
-                width: "100%",
-                height: 200,
-                objectFit: "cover",
-                borderRadius: 10
-              }}
-            />
+          <div style={{ padding:15 }}>
 
             <h3>{product.title}</h3>
 
-            <p>{product.price} FCFA</p>
+            <p style={{
+              color:"#00a884",
+              fontWeight:"bold",
+              fontSize:18
+            }}>
+              {product.price} FCFA
+            </p>
 
-          </Link>
+          </div>
 
-        ))}
+        </Link>
+
+      ))}
 
       </div>
 
