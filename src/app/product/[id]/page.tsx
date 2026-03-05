@@ -29,14 +29,26 @@ export default function ProductPage() {
 
       <h1>{product.title}</h1>
 
-      <img src={product.image} width="400"/>
+      <img
+        src={product.image}
+        width="400"
+        style={{ marginTop: 20 }}
+      />
 
-      <p>{product.price} FCFA</p>
+      <p style={{ fontSize: 20 }}>
+        {product.price} FCFA
+      </p>
 
       <br/>
 
       <Link href="/acheter">
-        <button style={{ padding:10 }}>
+        <button
+          style={{
+            padding: 12,
+            fontSize: 16,
+            cursor: "pointer"
+          }}
+        >
           Acheter
         </button>
       </Link>
