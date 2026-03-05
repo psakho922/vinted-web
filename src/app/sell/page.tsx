@@ -11,14 +11,14 @@ export default function SellPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    const token = localStorage.getItem("token");
+    const token =
+      localStorage.getItem("token") ||
+      sessionStorage.getItem("token");
 
     if (!token) {
       alert("Tu dois être connecté");
       return;
     }
-
-    const userId = JSON.parse(atob(token.split(".")[1])).userId;
 
     const res = await fetch(
       process.env.NEXT_PUBLIC_API_URL + "/products",
@@ -31,8 +31,7 @@ export default function SellPage() {
         body: JSON.stringify({
           title,
           price,
-          image,
-          userId
+          image
         })
       }
     );
@@ -47,7 +46,7 @@ export default function SellPage() {
 
   return (
     <div style={{ padding: 40 }}>
-      <h2>Vendre un produit</h2>
+      <h1>Vendre un produit</h1>
 
       <form onSubmit={handleSubmit}>
 
@@ -92,7 +91,7 @@ export default function SellPage() {
         <br /><br />
 
         <button type="submit">
-          Créer
+          Créer produit
         </button>
 
       </form>
