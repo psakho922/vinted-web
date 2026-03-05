@@ -6,6 +6,7 @@ import Link from "next/link";
 export default function Home() {
 
   const [products, setProducts] = useState<any[]>([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     fetch(process.env.NEXT_PUBLIC_API_URL + "/products")
@@ -13,25 +14,41 @@ export default function Home() {
       .then((data) => setProducts(data));
   }, []);
 
+  const filteredProducts = products.filter((product) =>
+    product.title.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <div style={{ padding: 40 }}>
 
       <h1>Marketplace</h1>
 
-      {products.length === 0 && (
-        <p>Aucun produit pour le moment</p>
+      <input
+        placeholder="🔎 Rechercher un produit..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        style={{
+          padding: 10,
+          width: "100%",
+          maxWidth: 400,
+          marginTop: 20,
+          marginBottom: 30
+        }}
+      />
+
+      {filteredProducts.length === 0 && (
+        <p>Aucun produit trouvé</p>
       )}
 
       <div
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fill, 250px)",
-          gap: 20,
-          marginTop: 30
+          gap: 20
         }}
       >
 
-        {products.map((product) => (
+        {filteredProducts.map((product) => (
 
           <Link
             key={product.id}
