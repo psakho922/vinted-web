@@ -20,19 +20,19 @@ export default function LoginPage() {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            email: email,
-            password: password
+            email,
+            password
           })
         }
       );
 
       const data = await res.json();
 
-      console.log("LOGIN RESPONSE:", data);
-
       if (data.access_token) {
 
+        // Sauvegarde du token (ordinateur + téléphone)
         localStorage.setItem("token", data.access_token);
+        sessionStorage.setItem("token", data.access_token);
 
         alert("Login réussi");
 
@@ -53,7 +53,6 @@ export default function LoginPage() {
 
   return (
     <div style={{ padding: 40 }}>
-
       <h1>Login</h1>
 
       <form onSubmit={handleLogin}>
@@ -83,7 +82,6 @@ export default function LoginPage() {
         </button>
 
       </form>
-
     </div>
   );
 }
