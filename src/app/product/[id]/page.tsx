@@ -21,6 +21,18 @@ export default function ProductPage() {
 
   }, [id]);
 
+  function addToCart() {
+
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+    cart.push(product);
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    alert("Produit ajouté au panier");
+
+  }
+
   async function deleteProduct() {
 
     const token = localStorage.getItem("token");
@@ -43,6 +55,7 @@ export default function ProductPage() {
     if (res.ok) {
 
       alert("Produit supprimé");
+
       window.location.href = "/";
 
     } else {
@@ -72,6 +85,15 @@ export default function ProductPage() {
       </p>
 
       <br/>
+
+      <button
+        onClick={addToCart}
+        style={{ padding:10 }}
+      >
+        Ajouter au panier
+      </button>
+
+      <br/><br/>
 
       <Link href="/acheter">
         <button style={{ padding:10 }}>
