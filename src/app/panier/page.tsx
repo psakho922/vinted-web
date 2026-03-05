@@ -17,6 +17,10 @@ export default function PanierPage() {
 
   const total = cart.reduce((sum, p) => sum + Number(p.price), 0);
 
+  const commission = total * 0.1;
+
+  const sellerAmount = total - commission;
+
   return (
 
     <div style={{ padding: 40 }}>
@@ -37,7 +41,13 @@ export default function PanierPage() {
 
       ))}
 
+      <br />
+
       <h2>Total : {total} FCFA</h2>
+
+      <h3>Commission plateforme : {commission} FCFA</h3>
+
+      <h3>Montant vendeur : {sellerAmount} FCFA</h3>
 
       <br />
 
@@ -47,7 +57,8 @@ export default function PanierPage() {
           background: "#00a884",
           color: "white",
           padding: "10px 20px",
-          borderRadius: 8
+          borderRadius: 8,
+          textDecoration: "none"
         }}
       >
         Payer
