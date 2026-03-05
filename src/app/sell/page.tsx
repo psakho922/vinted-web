@@ -32,46 +32,30 @@ export default function SellPage() {
       return;
     }
 
-    try {
-
-      const payload = JSON.parse(atob(token.split(".")[1]));
-      const userId = payload.userId;
-
-      const res = await fetch(
-        process.env.NEXT_PUBLIC_API_URL + "/products",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token
-          },
-          body: JSON.stringify({
-            title,
-            price: Number(price),
-            image,
-            userId
-          })
-        }
-      );
-
-      if (res.ok) {
-
-        alert("Produit créé !");
-        window.location.href = "/";
-
-      } else {
-
-        const error = await res.text();
-        console.log("ERREUR:", error);
-
-        alert("Erreur création produit");
-
+    const res = await fetch(
+      process.env.NEXT_PUBLIC_API_URL + "/products",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token
+        },
+        body: JSON.stringify({
+          title,
+          price: Number(price),
+          image
+        })
       }
+    );
 
-    } catch (err) {
+    if (res.ok) {
 
-      console.log(err);
-      alert("Erreur serveur");
+      alert("Produit créé !");
+      window.location.href = "/";
+
+    } else {
+
+      alert("Erreur création produit");
 
     }
   }
@@ -102,22 +86,10 @@ export default function SellPage() {
         <br /><br />
 
         <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => {
-
-            const file = e.target.files?.[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-
-            reader.onloadend = () => {
-              setImage(reader.result as string);
-            };
-
-            reader.readAsDataURL(file);
-
-          }}
+          placeholder="URL image (ex: https://...)"
+          value={image}
+          onChange={(e) => setImage(e.target.value)}
+          required
         />
 
         <br /><br />
