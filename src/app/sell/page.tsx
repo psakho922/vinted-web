@@ -32,32 +32,53 @@ export default function SellPage() {
       return;
     }
 
-    const res = await fetch(
-      process.env.NEXT_PUBLIC_API_URL + "/products",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token
-        },
-        body: JSON.stringify({
-          title,
-          price,
-          image
-        })
-      }
-    );
+    try {
 
-    if (res.ok) {
-      alert("Produit créé !");
-      window.location.href = "/";
-    } else {
-      alert("Erreur création produit");
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      const userId = payload.userId;
+
+      const res = await fetch(
+        process.env.NEXT_PUBLIC_API_URL + "/products",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token
+          },
+          body: JSON.stringify({
+            title,
+            price: Number(price),
+            image,
+            userId
+          })
+        }
+      );
+
+      if (res.ok) {
+
+        alert("Produit créé !");
+        window.location.href = "/";
+
+      } else {
+
+        const error = await res.text();
+        console.log("ERREUR:", error);
+
+        alert("Erreur création produit");
+
+      }
+
+    } catch (err) {
+
+      console.log(err);
+      alert("Erreur serveur");
+
     }
   }
 
   return (
     <div style={{ padding: 40 }}>
+
       <h1>Vendre un produit</h1>
 
       <form onSubmit={handleSubmit}>
@@ -86,7 +107,6 @@ export default function SellPage() {
           onChange={(e) => {
 
             const file = e.target.files?.[0];
-
             if (!file) return;
 
             const reader = new FileReader();
@@ -107,6 +127,7 @@ export default function SellPage() {
         </button>
 
       </form>
+
     </div>
   );
 }
