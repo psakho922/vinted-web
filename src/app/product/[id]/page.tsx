@@ -25,7 +25,7 @@ export default function ProductPage() {
 
   return (
 
-    <div style={{padding:40}}>
+    <div style={{ padding: 40 }}>
 
       <h1>{product.title}</h1>
 
@@ -33,8 +33,12 @@ export default function ProductPage() {
 
       <p>{product.price} FCFA</p>
 
+      <br/>
+
       <Link href="/acheter">
-        <button>Acheter</button>
+        <button style={{ padding:10 }}>
+          Acheter
+        </button>
       </Link>
 
     </div>
