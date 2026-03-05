@@ -1,64 +1,70 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 
-export default function AcheterPage(){
+export default function Home() {
 
-  const [method,setMethod] = useState("");
+  const [products, setProducts] = useState<any[]>([]);
 
-  function payer(){
+  useEffect(() => {
 
-    if(!method){
-      alert("Choisissez un moyen de paiement");
-      return;
-    }
+    fetch(process.env.NEXT_PUBLIC_API_URL + "/products")
+      .then(res => res.json())
+      .then(data => setProducts(data));
 
-    alert("Paiement simulé avec " + method);
+  }, []);
 
-  }
+  return (
 
-  return(
+    <div style={{ padding: 40 }}>
 
-    <div style={{padding:40}}>
+      <h1>Marketplace</h1>
 
-      <h1>Paiement</h1>
+      {products.length === 0 && (
+        <p>Aucun produit pour le moment</p>
+      )}
 
-      <p>Choisissez un moyen de paiement :</p>
-
-      <br/>
-
-      <button
-        onClick={()=>setMethod("Wave")}
+      <div
         style={{
-          padding:10,
-          marginRight:10
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill,220px)",
+          gap: 30,
+          marginTop: 30
         }}
       >
-        Wave
-      </button>
 
-      <button
-        onClick={()=>setMethod("Orange Money")}
-        style={{
-          padding:10
-        }}
-      >
-        Orange Money
-      </button>
+        {products.map((p: any) => (
 
-      <br/><br/>
+          <Link
+            key={p.id}
+            href={"/product/" + p.id}
+            style={{
+              border: "1px solid #ddd",
+              borderRadius: 10,
+              padding: 10,
+              textDecoration: "none",
+              color: "black"
+            }}
+          >
 
-      <button
-        onClick={payer}
-        style={{
-          background:"#00a884",
-          color:"white",
-          padding:"10px 20px",
-          borderRadius:8
-        }}
-      >
-        Payer
-      </button>
+            <img
+              src={p.image}
+              style={{
+                width: "100%",
+                borderRadius: 10
+              }}
+            />
+
+            <h3>{p.title}</h3>
+
+            <p>{p.price} FCFA</p>
+
+          </Link>
+
+        ))}
+
+      </div>
 
     </div>
 
