@@ -10,23 +10,30 @@ export default function LoginPage() {
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
 
-    const res = await fetch(
-      process.env.NEXT_PUBLIC_API_URL + "/auth/login",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          email,
-          password
-        })
+    try {
+
+      const res = await fetch(
+        process.env.NEXT_PUBLIC_API_URL + "/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            email,
+            password
+          })
+        }
+      );
+
+      const data = await res.json();
+
+      console.log("LOGIN RESPONSE:", data);
+
+      if (!data.access_token) {
+        alert("Erreur login");
+        return;
       }
-    );
-
-    const data = await res.json();
-
-    if (res.ok) {
 
       // sauvegarde du token
       localStorage.setItem("token", data.access_token);
@@ -35,14 +42,13 @@ export default function LoginPage() {
 
       window.location.href = "/sell";
 
-    } else {
-      alert("Erreur login");
+    } catch (error) {
+      alert("Erreur serveur");
     }
   }
 
   return (
     <div style={{ padding: 40 }}>
-
       <h1>Login</h1>
 
       <form onSubmit={handleLogin}>
@@ -72,7 +78,6 @@ export default function LoginPage() {
         </button>
 
       </form>
-
     </div>
   );
 }
