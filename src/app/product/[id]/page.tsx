@@ -21,6 +21,38 @@ export default function ProductPage() {
 
   }, [id]);
 
+  async function deleteProduct() {
+
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("Tu dois être connecté");
+      return;
+    }
+
+    const res = await fetch(
+      process.env.NEXT_PUBLIC_API_URL + "/products/" + id,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: "Bearer " + token
+        }
+      }
+    );
+
+    if (res.ok) {
+
+      alert("Produit supprimé");
+      window.location.href = "/";
+
+    } else {
+
+      alert("Erreur suppression");
+
+    }
+
+  }
+
   if (!product) return <p>Chargement...</p>;
 
   return (
@@ -42,16 +74,27 @@ export default function ProductPage() {
       <br/>
 
       <Link href="/acheter">
-        <button
-          style={{
-            padding: 12,
-            fontSize: 16,
-            cursor: "pointer"
-          }}
-        >
+        <button style={{ padding:10 }}>
           Acheter
         </button>
       </Link>
+
+      <br/><br/>
+
+      <Link href={"/seller/" + product.userId}>
+        <button>
+          Profil vendeur
+        </button>
+      </Link>
+
+      <br/><br/>
+
+      <button
+        onClick={deleteProduct}
+        style={{ background: "red", color: "white", padding:10 }}
+      >
+        Supprimer
+      </button>
 
     </div>
 
