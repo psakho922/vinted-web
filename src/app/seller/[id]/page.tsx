@@ -2,96 +2,49 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import Link from "next/link";
 
-export default function SellerPage() {
+export default function ProductPage() {
 
   const params = useParams();
   const id = params.id as string;
 
-  const [products, setProducts] = useState<any[]>([]);
+  const [product, setProduct] = useState<any>(null);
 
   useEffect(() => {
 
-    fetch(process.env.NEXT_PUBLIC_API_URL + "/products")
+    fetch(process.env.NEXT_PUBLIC_API_URL + "/products/" + id)
       .then(res => res.json())
-      .then(data => {
-
-        const sellerProducts = data.filter(
-          (p: any) => p.userId === id
-        );
-
-        setProducts(sellerProducts);
-
-      });
+      .then(data => setProduct(data));
 
   }, [id]);
+
+  if (!product) return <p>Chargement...</p>;
 
   return (
     <div style={{ padding: 40 }}>
 
-      <h1>Profil vendeur</h1>
+      <h1>{product.title}</h1>
 
-      <p>ID vendeur : {id}</p>
+      <img
+        src={product.image}
+        style={{ width: 400, marginTop: 20 }}
+      />
 
-      <h2>Produits du vendeur</h2>
+      <p style={{ fontSize: 20 }}>
+        {product.price} FCFA
+      </p>
 
-      {products.length === 0 && (
-        <p>Aucun produit pour ce vendeur</p>
-      )}
+      <br />
 
-      <div
+      <a
+        href={"/seller/" + product.userId}
         style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill,250px)",
-          gap: 20,
-          marginTop: 20
+          color: "blue",
+          textDecoration: "underline"
         }}
       >
-
-        {products.map(product => (
-
-          <Link
-            key={product.id}
-            href={"/product/" + product.id}
-            style={{
-              border: "1px solid #eee",
-              borderRadius: 10,
-              textDecoration: "none",
-              color: "black",
-              overflow: "hidden"
-            }}
-          >
-
-            <img
-              src={product.image}
-              style={{
-                width: "100%",
-                height: 200,
-                objectFit: "cover"
-              }}
-            />
-
-            <div style={{ padding: 10 }}>
-
-              <h3>{product.title}</h3>
-
-              <p
-                style={{
-                  color: "#00a884",
-                  fontWeight: "bold"
-                }}
-              >
-                {product.price} FCFA
-              </p>
-
-            </div>
-
-          </Link>
-
-        ))}
-
-      </div>
+        Voir profil vendeur
+      </a>
 
     </div>
   );
