@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 export default function LoginPage() {
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -14,32 +15,40 @@ export default function LoginPage() {
       {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           email,
-          password,
-        }),
+          password
+        })
       }
     );
 
     const data = await res.json();
 
     if (res.ok) {
+
+      // sauvegarde du token
       localStorage.setItem("token", data.access_token);
-      alert("Login réussi !");
+
+      alert("Login réussi");
+
       window.location.href = "/sell";
+
     } else {
       alert("Erreur login");
     }
   }
 
   return (
-    <div style={{ padding: "40px" }}>
-      <h2>Login</h2>
+    <div style={{ padding: 40 }}>
+
+      <h1>Login</h1>
 
       <form onSubmit={handleLogin}>
+
         <input
+          type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -58,8 +67,12 @@ export default function LoginPage() {
 
         <br /><br />
 
-        <button type="submit">Se connecter</button>
+        <button type="submit">
+          Se connecter
+        </button>
+
       </form>
+
     </div>
   );
 }
