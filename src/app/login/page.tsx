@@ -20,8 +20,8 @@ export default function LoginPage() {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            email,
-            password
+            email: email,
+            password: password
           })
         }
       );
@@ -30,25 +30,30 @@ export default function LoginPage() {
 
       console.log("LOGIN RESPONSE:", data);
 
-      if (!data.access_token) {
+      if (data.access_token) {
+
+        localStorage.setItem("token", data.access_token);
+
+        alert("Login réussi");
+
+        window.location.href = "/sell";
+
+      } else {
+
         alert("Erreur login");
-        return;
+
       }
 
-      // sauvegarde du token
-      localStorage.setItem("token", data.access_token);
-
-      alert("Login réussi");
-
-      window.location.href = "/sell";
-
     } catch (error) {
+
       alert("Erreur serveur");
+
     }
   }
 
   return (
     <div style={{ padding: 40 }}>
+
       <h1>Login</h1>
 
       <form onSubmit={handleLogin}>
@@ -78,6 +83,7 @@ export default function LoginPage() {
         </button>
 
       </form>
+
     </div>
   );
 }
