@@ -4,42 +4,18 @@ import { useState } from "react";
 
 export default function SellPage() {
 
-  const [title, setTitle] = useState("");
-  const [price, setPrice] = useState("");
-  const [image, setImage] = useState("");
+  const [title,setTitle] = useState("");
+  const [price,setPrice] = useState("");
+  const [image,setImage] = useState("");
+  const [category,setCategory] = useState("");
 
-  async function uploadImage(file: File) {
+  async function handleSubmit(e:any){
 
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", "vinted_upload");
-
-    const res = await fetch(
-      "https://api.cloudinary.com/v1_1/dtfumoro5/image/upload",
-      {
-        method: "POST",
-        body: formData,
-      }
-    );
-
-    const data = await res.json();
-    return data.secure_url;
-  }
-
-  async function handleFile(e: any) {
-    const file = e.target.files[0];
-
-    const imageUrl = await uploadImage(file);
-
-    setImage(imageUrl);
-  }
-
-  async function handleSubmit(e: any) {
     e.preventDefault();
 
     const token = localStorage.getItem("token");
 
-    if (!token) {
+    if(!token){
       alert("Tu dois être connecté");
       return;
     }
@@ -47,29 +23,32 @@ export default function SellPage() {
     const res = await fetch(
       process.env.NEXT_PUBLIC_API_URL + "/products",
       {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json",
+          Authorization:"Bearer " + token
         },
-        body: JSON.stringify({
+        body:JSON.stringify({
           title,
           price,
-          image
-        }),
+          image,
+          category
+        })
       }
     );
 
-    if (res.ok) {
+    if(res.ok){
       alert("Produit créé !");
-      window.location.href = "/";
-    } else {
+      window.location.href="/";
+    }else{
       alert("Erreur création produit");
     }
+
   }
 
-  return (
-    <div style={{ padding: 40 }}>
+  return(
+
+    <div style={{padding:40}}>
 
       <h2>Vendre un produit</h2>
 
@@ -78,33 +57,45 @@ export default function SellPage() {
         <input
           placeholder="Titre"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e)=>setTitle(e.target.value)}
           required
         />
 
-        <br /><br />
+        <br/><br/>
 
         <input
           placeholder="Prix"
           value={price}
-          onChange={(e) => setPrice(e.target.value)}
+          onChange={(e)=>setPrice(e.target.value)}
           required
         />
 
-        <br /><br />
+        <br/><br/>
 
         <input
-          type="file"
-          onChange={handleFile}
+          placeholder="URL image"
+          value={image}
+          onChange={(e)=>setImage(e.target.value)}
+          required
         />
 
-        <br /><br />
+        <br/><br/>
 
-        {image && (
-          <img src={image} width="200" />
-        )}
+        <select
+          value={category}
+          onChange={(e)=>setCategory(e.target.value)}
+          required
+        >
 
-        <br /><br />
+          <option value="">Choisir catégorie</option>
+          <option value="Chaussures">Chaussures</option>
+          <option value="Vêtements">Vêtements</option>
+          <option value="Sacs">Sacs</option>
+          <option value="Accessoires">Accessoires</option>
+
+        </select>
+
+        <br/><br/>
 
         <button type="submit">
           Créer produit
@@ -113,5 +104,7 @@ export default function SellPage() {
       </form>
 
     </div>
+
   );
+
 }
