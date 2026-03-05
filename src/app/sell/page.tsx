@@ -14,7 +14,7 @@ export default function SellPage() {
     const formData = new FormData();
 
     formData.append("file", file);
-    formData.append("upload_preset", "vinted_upload");
+    formData.append("upload_preset", "vinted_market");
 
     const res = await fetch(
       "https://api.cloudinary.com/v1_1/dtfumoro5/image/upload",
