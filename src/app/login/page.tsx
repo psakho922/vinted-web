@@ -30,9 +30,12 @@ export default function LoginPage() {
 
       if (data.access_token) {
 
-        // Sauvegarde du token (ordinateur + téléphone)
+        // stockage du token
         localStorage.setItem("token", data.access_token);
         sessionStorage.setItem("token", data.access_token);
+
+        // cookie pour mobile
+        document.cookie = "token=" + data.access_token + "; path=/";
 
         alert("Login réussi");
 
