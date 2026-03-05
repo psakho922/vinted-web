@@ -3,15 +3,17 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
-export default function Home() {
+export default function HomePage() {
 
   const [products, setProducts] = useState<any[]>([]);
 
   useEffect(() => {
 
     fetch(process.env.NEXT_PUBLIC_API_URL + "/products")
-      .then(res => res.json())
-      .then(data => setProducts(data));
+      .then((res) => res.json())
+      .then((data) => {
+        setProducts(data);
+      });
 
   }, []);
 
@@ -25,40 +27,27 @@ export default function Home() {
         <p>Aucun produit pour le moment</p>
       )}
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill,220px)",
-          gap: 30,
-          marginTop: 30
-        }}
-      >
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }}>
 
-        {products.map((p: any) => (
+        {products.map((product) => (
 
-          <Link
-            key={p.id}
-            href={"/product/" + p.id}
-            style={{
-              border: "1px solid #ddd",
-              borderRadius: 10,
-              padding: 10,
-              textDecoration: "none",
-              color: "black"
-            }}
-          >
+          <Link key={product.id} href={"/product/" + product.id}>
 
-            <img
-              src={p.image}
-              style={{
-                width: "100%",
-                borderRadius: 10
-              }}
-            />
+            <div style={{ border: "1px solid #ddd", padding: 20 }}>
 
-            <h3>{p.title}</h3>
+              {product.image && (
+                <img
+                  src={product.image}
+                  width="200"
+                  style={{ objectFit: "cover" }}
+                />
+              )}
 
-            <p>{p.price} FCFA</p>
+              <h3>{product.title}</h3>
+
+              <p>{product.price} FCFA</p>
+
+            </div>
 
           </Link>
 
@@ -67,7 +56,5 @@ export default function Home() {
       </div>
 
     </div>
-
   );
-
 }
