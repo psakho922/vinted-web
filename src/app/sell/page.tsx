@@ -7,30 +7,41 @@ export default function SellPage() {
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
   const [image, setImage] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  function getToken() {
+  async function uploadImage(file: File) {
 
-    const local = localStorage.getItem("token");
-    const session = sessionStorage.getItem("token");
+    const formData = new FormData();
 
-    const cookie = document.cookie
-      .split("; ")
-      .find(row => row.startsWith("token="))
-      ?.split("=")[1];
+    formData.append("file", file);
+    formData.append("upload_preset", "vinted_upload");
 
-    return local || session || cookie;
+    const res = await fetch(
+      "https://api.cloudinary.com/v1_1/dtfumoro5/image/upload",
+      {
+        method: "POST",
+        body: formData
+      }
+    );
+
+    const data = await res.json();
+
+    setImage(data.secure_url);
   }
 
   async function handleSubmit(e: React.FormEvent) {
+
     e.preventDefault();
 
-    const token = getToken();
+    const token = localStorage.getItem("token");
 
     if (!token) {
       alert("Tu dois être connecté");
       window.location.href = "/login";
       return;
     }
+
+    setLoading(true);
 
     const res = await fetch(
       process.env.NEXT_PUBLIC_API_URL + "/products",
@@ -42,21 +53,19 @@ export default function SellPage() {
         },
         body: JSON.stringify({
           title,
-          price: Number(price),
+          price,
           image
         })
       }
     );
 
-    if (res.ok) {
+    setLoading(false);
 
+    if (res.ok) {
       alert("Produit créé !");
       window.location.href = "/";
-
     } else {
-
       alert("Erreur création produit");
-
     }
   }
 
@@ -86,16 +95,26 @@ export default function SellPage() {
         <br /><br />
 
         <input
-          placeholder="URL image (ex: https://...)"
-          value={image}
-          onChange={(e) => setImage(e.target.value)}
-          required
+          type="file"
+          accept="image/*"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) uploadImage(file);
+          }}
         />
 
         <br /><br />
 
+        {image && (
+          <img src={image} width="200" />
+        )}
+
+        <br /><br />
+
         <button type="submit">
-          Créer produit
+
+          {loading ? "Création..." : "Créer produit"}
+
         </button>
 
       </form>
