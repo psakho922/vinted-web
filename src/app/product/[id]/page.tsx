@@ -24,6 +24,18 @@ export default function ProductPage() {
 
   }, [id]);
 
+  function addToCart() {
+
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+    cart.push(product);
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    alert("Produit ajouté au panier");
+
+  }
+
   if (!product) return <p>Chargement...</p>;
 
   return (
@@ -36,8 +48,7 @@ export default function ProductPage() {
         src={product.image}
         style={{
           width: 400,
-          borderRadius: 10,
-          marginTop: 20
+          borderRadius: 10
         }}
       />
 
@@ -47,30 +58,21 @@ export default function ProductPage() {
 
       <br />
 
-      <Link
-        href={"/seller/" + product.userId}
-        style={{
-          color: "blue",
-          textDecoration: "underline"
-        }}
-      >
-        Voir profil vendeur
-      </Link>
-
-      <br /><br />
-
-      <Link
-        href="/acheter"
+      <button
+        onClick={addToCart}
         style={{
           background: "#00a884",
           color: "white",
           padding: "10px 20px",
-          borderRadius: 8,
-          textDecoration: "none"
+          borderRadius: 8
         }}
       >
-        Acheter
-      </Link>
+        Ajouter au panier
+      </button>
+
+      <br /><br />
+
+      <Link href="/panier">Voir le panier</Link>
 
     </div>
 
