@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 
 export default function PanierPage() {
 
@@ -9,63 +8,57 @@ export default function PanierPage() {
 
   useEffect(() => {
 
-    const stored = JSON.parse(localStorage.getItem("cart") || "[]");
+    const savedCart = localStorage.getItem("cart");
 
-    setCart(stored);
+    if (savedCart) {
+      setCart(JSON.parse(savedCart));
+    }
 
   }, []);
 
-  const total = cart.reduce((sum, p) => sum + Number(p.price), 0);
+  const total = cart.reduce((sum, p) => sum + p.price, 0);
 
-  const commission = total * 0.1;
+  function removeItem(index:number){
 
-  const sellerAmount = total - commission;
+    const newCart = [...cart];
+
+    newCart.splice(index,1);
+
+    setCart(newCart);
+
+    localStorage.setItem("cart", JSON.stringify(newCart));
+
+  }
 
   return (
 
-    <div style={{ padding: 40 }}>
+    <div style={{padding:40}}>
 
-      <h1>Panier</h1>
+      <h1>Mon panier</h1>
 
-      {cart.length === 0 && <p>Votre panier est vide</p>}
+      {cart.length === 0 && <p>Panier vide</p>}
 
-      {cart.map((p, i) => (
+      {cart.map((product, index) => (
 
-        <div key={i} style={{ marginBottom: 20 }}>
+        <div key={index} style={{marginBottom:30}}>
 
-          <h3>{p.title}</h3>
+          <img src={product.image} width="200"/>
 
-          <p>{p.price} FCFA</p>
+          <h3>{product.title}</h3>
+
+          <p>{product.price} FCFA</p>
+
+          <button onClick={()=>removeItem(index)}>
+            Supprimer
+          </button>
 
         </div>
 
       ))}
 
-      <br />
-
       <h2>Total : {total} FCFA</h2>
-
-      <h3>Commission plateforme : {commission} FCFA</h3>
-
-      <h3>Montant vendeur : {sellerAmount} FCFA</h3>
-
-      <br />
-
-      <Link
-        href="/acheter"
-        style={{
-          background: "#00a884",
-          color: "white",
-          padding: "10px 20px",
-          borderRadius: 8,
-          textDecoration: "none"
-        }}
-      >
-        Payer
-      </Link>
 
     </div>
 
   );
-
 }
