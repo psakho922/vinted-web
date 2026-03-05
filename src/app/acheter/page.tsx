@@ -16,9 +16,11 @@ export default function AcheterPage() {
     alert("Paiement réussi avec " + method);
 
     window.location.href = "/commande";
+
   }
 
   return (
+
     <div style={{ padding: 40 }}>
 
       <h1>Paiement</h1>
@@ -29,19 +31,14 @@ export default function AcheterPage() {
 
       <button
         onClick={() => setMethod("Wave")}
-        style={{
-          padding: 10,
-          marginRight: 10
-        }}
+        style={{ padding: 10, marginRight: 10 }}
       >
         Wave
       </button>
 
       <button
         onClick={() => setMethod("Orange Money")}
-        style={{
-          padding: 10
-        }}
+        style={{ padding: 10 }}
       >
         Orange Money
       </button>
@@ -61,5 +58,7 @@ export default function AcheterPage() {
       </button>
 
     </div>
+
   );
+
 }
