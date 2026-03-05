@@ -7,9 +7,11 @@ export default function SellPage() {
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
   const [image, setImage] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   async function uploadImage(file: File) {
+
+    setUploading(true);
 
     const formData = new FormData();
 
@@ -27,6 +29,8 @@ export default function SellPage() {
     const data = await res.json();
 
     setImage(data.secure_url);
+
+    setUploading(false);
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -37,11 +41,13 @@ export default function SellPage() {
 
     if (!token) {
       alert("Tu dois être connecté");
-      window.location.href = "/login";
       return;
     }
 
-    setLoading(true);
+    if (!image) {
+      alert("Attends que l'image soit uploadée");
+      return;
+    }
 
     const res = await fetch(
       process.env.NEXT_PUBLIC_API_URL + "/products",
@@ -59,17 +65,21 @@ export default function SellPage() {
       }
     );
 
-    setLoading(false);
-
     if (res.ok) {
+
       alert("Produit créé !");
       window.location.href = "/";
+
     } else {
+
       alert("Erreur création produit");
+
     }
+
   }
 
   return (
+
     <div style={{ padding: 40 }}>
 
       <h1>Vendre un produit</h1>
@@ -80,7 +90,6 @@ export default function SellPage() {
           placeholder="Titre"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          required
         />
 
         <br /><br />
@@ -89,7 +98,6 @@ export default function SellPage() {
           placeholder="Prix"
           value={price}
           onChange={(e) => setPrice(e.target.value)}
-          required
         />
 
         <br /><br />
@@ -98,25 +106,35 @@ export default function SellPage() {
           type="file"
           accept="image/*"
           onChange={(e) => {
+
             const file = e.target.files?.[0];
-            if (file) uploadImage(file);
+
+            if (file) {
+              uploadImage(file);
+            }
+
           }}
         />
 
         <br /><br />
 
+        {uploading && <p>Upload image...</p>}
+
         {image && (
-          <img src={image} width="200" />
+          <img src={image} width="200"/>
         )}
 
         <br /><br />
 
         <button type="submit">
-          {loading ? "Création..." : "Créer produit"}
+
+          Créer produit
+
         </button>
 
       </form>
 
     </div>
+
   );
 }
