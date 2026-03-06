@@ -11,6 +11,7 @@ export default function SellPage() {
   async function uploadImage(file: File) {
 
     const formData = new FormData();
+
     formData.append("file", file);
     formData.append("upload_preset", "vinted_upload");
 
@@ -25,20 +26,23 @@ export default function SellPage() {
     const data = await res.json();
 
     setImage(data.secure_url);
+
   }
 
   async function handleSubmit(e: React.FormEvent) {
 
     e.preventDefault();
 
-    if (typeof window === "undefined") return;
-
     const token = localStorage.getItem("token");
 
     if (!token) {
+
       alert("Tu dois être connecté");
+
       window.location.href = "/login";
+
       return;
+
     }
 
     const res = await fetch(
@@ -105,7 +109,9 @@ export default function SellPage() {
             const file = e.target.files?.[0];
 
             if(file){
+
               uploadImage(file);
+
             }
 
           }}
@@ -113,8 +119,22 @@ export default function SellPage() {
 
         <br/><br/>
 
+        {image && (
+
+          <img
+            src={image}
+            width="200"
+            style={{marginTop:20}}
+          />
+
+        )}
+
+        <br/><br/>
+
         <button type="submit">
+
           Publier le produit
+
         </button>
 
       </form>
