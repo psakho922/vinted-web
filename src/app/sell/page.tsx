@@ -7,45 +7,18 @@ export default function SellPage() {
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
   const [image, setImage] = useState("");
-  const [uploading, setUploading] = useState(false);
 
-  async function uploadImage(file: File) {
-
-    setUploading(true);
-
-    const formData = new FormData();
-
-    formData.append("file", file);
-    formData.append("upload_preset", "vinted_market");
-
-    const res = await fetch(
-      "https://api.cloudinary.com/v1_1/dtfumoro5/image/upload",
-      {
-        method: "POST",
-        body: formData
-      }
-    );
-
-    const data = await res.json();
-
-    setImage(data.secure_url);
-
-    setUploading(false);
-  }
-
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e:any) {
 
     e.preventDefault();
 
-    const token = localStorage.getItem("token");
+    const token =
+      typeof window !== "undefined"
+        ? localStorage.getItem("token")
+        : null;
 
     if (!token) {
       alert("Tu dois être connecté");
-      return;
-    }
-
-    if (!image) {
-      alert("Attends que l'image soit uploadée");
       return;
     }
 
@@ -66,21 +39,15 @@ export default function SellPage() {
     );
 
     if (res.ok) {
-
       alert("Produit créé !");
       window.location.href = "/";
-
     } else {
-
       alert("Erreur création produit");
-
     }
-
   }
 
   return (
-
-    <div style={{ padding: 40 }}>
+    <div style={{padding:40}}>
 
       <h1>Vendre un produit</h1>
 
@@ -89,52 +56,33 @@ export default function SellPage() {
         <input
           placeholder="Titre"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e)=>setTitle(e.target.value)}
         />
 
-        <br /><br />
+        <br/><br/>
 
         <input
           placeholder="Prix"
           value={price}
-          onChange={(e) => setPrice(e.target.value)}
+          onChange={(e)=>setPrice(e.target.value)}
         />
 
-        <br /><br />
+        <br/><br/>
 
         <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => {
-
-            const file = e.target.files?.[0];
-
-            if (file) {
-              uploadImage(file);
-            }
-
-          }}
+          placeholder="URL image"
+          value={image}
+          onChange={(e)=>setImage(e.target.value)}
         />
 
-        <br /><br />
-
-        {uploading && <p>Upload image...</p>}
-
-        {image && (
-          <img src={image} width="200"/>
-        )}
-
-        <br /><br />
+        <br/><br/>
 
         <button type="submit">
-
-          Créer produit
-
+          Créer
         </button>
 
       </form>
 
     </div>
-
   );
 }
