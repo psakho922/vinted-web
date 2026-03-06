@@ -8,14 +8,30 @@ export default function SellPage() {
   const [price, setPrice] = useState("");
   const [image, setImage] = useState("");
 
-  async function handleSubmit(e:any) {
+  async function uploadImage(file: File) {
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "vinted_upload");
+
+    const res = await fetch(
+      "https://api.cloudinary.com/v1_1/dtfumoro5/image/upload",
+      {
+        method: "POST",
+        body: formData
+      }
+    );
+
+    const data = await res.json();
+
+    setImage(data.secure_url);
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
 
     e.preventDefault();
 
-    const token =
-      typeof window !== "undefined"
-        ? localStorage.getItem("token")
-        : null;
+    const token = localStorage.getItem("token");
 
     if (!token) {
       alert("Tu dois être connecté");
@@ -39,15 +55,22 @@ export default function SellPage() {
     );
 
     if (res.ok) {
-      alert("Produit créé !");
+
+      alert("Produit créé");
+
       window.location.href = "/";
+
     } else {
+
       alert("Erreur création produit");
+
     }
+
   }
 
   return (
-    <div style={{padding:40}}>
+
+    <div style={{ padding: 40 }}>
 
       <h1>Vendre un produit</h1>
 
@@ -57,6 +80,7 @@ export default function SellPage() {
           placeholder="Titre"
           value={title}
           onChange={(e)=>setTitle(e.target.value)}
+          required
         />
 
         <br/><br/>
@@ -65,24 +89,35 @@ export default function SellPage() {
           placeholder="Prix"
           value={price}
           onChange={(e)=>setPrice(e.target.value)}
+          required
         />
 
         <br/><br/>
 
         <input
-          placeholder="URL image"
-          value={image}
-          onChange={(e)=>setImage(e.target.value)}
+          type="file"
+          accept="image/*"
+          onChange={(e)=>{
+
+            const file = e.target.files?.[0];
+
+            if(file){
+              uploadImage(file);
+            }
+
+          }}
         />
 
         <br/><br/>
 
         <button type="submit">
-          Créer
+          Publier le produit
         </button>
 
       </form>
 
     </div>
+
   );
+
 }
