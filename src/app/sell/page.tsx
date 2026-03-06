@@ -31,10 +31,13 @@ export default function SellPage() {
 
     e.preventDefault();
 
+    if (typeof window === "undefined") return;
+
     const token = localStorage.getItem("token");
 
     if (!token) {
       alert("Tu dois être connecté");
+      window.location.href = "/login";
       return;
     }
 
