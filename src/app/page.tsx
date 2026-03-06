@@ -51,9 +51,15 @@ export default function HomePage() {
             >
 
               <img
-                src={product.image || "https://via.placeholder.com/300"}
+                src={
+                  product.image && product.image !== ""
+                    ? product.image
+                    : "https://via.placeholder.com/300"
+                }
                 width="180"
-                style={{ objectFit: "cover" }}
+                style={{
+                  objectFit: "cover"
+                }}
               />
 
               <h3>{product.title}</h3>
