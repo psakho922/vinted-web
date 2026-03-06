@@ -27,21 +27,34 @@ export default function HomePage() {
         <p>Aucun produit pour le moment</p>
       )}
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill,200px)",
+          gap: 20
+        }}
+      >
 
         {products.map((product) => (
 
-          <Link key={product.id} href={"/product/" + product.id}>
+          <Link
+            key={product.id}
+            href={"/product/" + product.id}
+          >
 
-            <div style={{ border: "1px solid #ddd", padding: 20 }}>
+            <div
+              style={{
+                border: "1px solid #ddd",
+                padding: 10,
+                cursor: "pointer"
+              }}
+            >
 
-              {product.image && (
-                <img
-                  src={product.image}
-                  width="200"
-                  style={{ objectFit: "cover" }}
-                />
-              )}
+              <img
+                src={product.image || "https://via.placeholder.com/300"}
+                width="180"
+                style={{ objectFit: "cover" }}
+              />
 
               <h3>{product.title}</h3>
 
@@ -56,5 +69,7 @@ export default function HomePage() {
       </div>
 
     </div>
+
   );
+
 }
