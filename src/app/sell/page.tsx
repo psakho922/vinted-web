@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Button from "@/components/Button";
 
 export default function SellPage() {
 
@@ -8,7 +9,7 @@ export default function SellPage() {
   const [price,setPrice] = useState("");
   const [image,setImage] = useState("");
 
-  async function uploadImage(file:File){
+  async function uploadImage(file:any){
 
     const formData = new FormData();
 
@@ -33,20 +34,12 @@ export default function SellPage() {
 
     e.preventDefault();
 
-    let token = null;
-
-    if(typeof window !== "undefined"){
-
-      token = localStorage.getItem("token");
-
-    }
+    const token = localStorage.getItem("token");
 
     if(!token){
 
-      alert("Session expirée, reconnecte-toi");
-
+      alert("Tu dois être connecté");
       window.location.href="/login";
-
       return;
 
     }
@@ -54,7 +47,6 @@ export default function SellPage() {
     if(!image){
 
       alert("Image obligatoire");
-
       return;
 
     }
@@ -65,7 +57,7 @@ export default function SellPage() {
         method:"POST",
         headers:{
           "Content-Type":"application/json",
-          Authorization:"Bearer "+token
+          Authorization:"Bearer " + token
         },
         body:JSON.stringify({
           title,
@@ -74,18 +66,6 @@ export default function SellPage() {
         })
       }
     );
-
-    if(res.status === 401){
-
-      localStorage.removeItem("token");
-
-      alert("Session expirée");
-
-      window.location.href="/login";
-
-      return;
-
-    }
 
     if(res.ok){
 
@@ -110,37 +90,37 @@ export default function SellPage() {
       <form onSubmit={handleSubmit}>
 
         <input
-        placeholder="Titre"
-        value={title}
-        onChange={(e)=>setTitle(e.target.value)}
-        required
+          placeholder="Titre"
+          value={title}
+          onChange={(e)=>setTitle(e.target.value)}
+          required
         />
 
         <br/><br/>
 
         <input
-        placeholder="Prix"
-        value={price}
-        onChange={(e)=>setPrice(e.target.value)}
-        required
+          placeholder="Prix"
+          value={price}
+          onChange={(e)=>setPrice(e.target.value)}
+          required
         />
 
         <br/><br/>
 
         <input
-        type="file"
-        accept="image/*"
-        onChange={(e)=>{
+          type="file"
+          accept="image/*"
+          onChange={(e)=>{
 
-          const file = e.target.files?.[0];
+            const file = e.target.files?.[0];
 
-          if(file){
+            if(file){
 
-            uploadImage(file);
+              uploadImage(file);
 
-          }
+            }
 
-        }}
+          }}
         />
 
         <br/><br/>
@@ -148,19 +128,20 @@ export default function SellPage() {
         {image && (
 
           <img
-          src={image}
-          width="200"
+            src={image}
+            width="200"
+            style={{borderRadius:10}}
           />
 
         )}
 
         <br/><br/>
 
-        <button type="submit">
+        <Button type="submit">
 
           Publier le produit
 
-        </button>
+        </Button>
 
       </form>
 
