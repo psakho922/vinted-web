@@ -45,7 +45,7 @@ export default function LoginPage() {
 
       setMessage("Login réussi");
 
-      window.location.href="/sell";
+      window.location.href="/";
 
     }catch(err){
 
