@@ -1,21 +1,25 @@
 import "./globals.css";
+import { ReactNode } from "react";
 
 export const metadata = {
   title: "Bibani Boutique",
   description: "Marketplace de vêtements"
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
   return (
     <html lang="fr">
       <body
         style={{
           margin: 0,
           fontFamily: "Arial, sans-serif",
-          background: "#f6f6f6"
+          background: "#f6f6f6",
         }}
       >
-
         <nav
           style={{
             display: "flex",
@@ -23,13 +27,10 @@ export default function RootLayout({ children }) {
             alignItems: "center",
             padding: "20px",
             background: "#ffffff",
-            borderBottom: "1px solid #ddd"
+            borderBottom: "1px solid #ddd",
           }}
         >
-
-          <h2 style={{ color: "#09b1ba" }}>
-            Bibani Boutique
-          </h2>
+          <h2 style={{ color: "#09b1ba" }}>Bibani Boutique</h2>
 
           <div style={{ display: "flex", gap: "20px" }}>
             <a href="/">Home</a>
@@ -37,13 +38,9 @@ export default function RootLayout({ children }) {
             <a href="/panier">Panier</a>
             <a href="/profile">Profil</a>
           </div>
-
         </nav>
 
-        <main style={{ padding: "40px" }}>
-          {children}
-        </main>
-
+        <main style={{ padding: "40px" }}>{children}</main>
       </body>
     </html>
   );
