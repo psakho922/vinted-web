@@ -86,7 +86,9 @@ export default function SellPage() {
 
     }else{
 
-      alert("Erreur création produit");
+      const text = await res.text();
+
+      alert("Erreur serveur : " + text);
 
     }
 
