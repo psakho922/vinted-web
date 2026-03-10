@@ -4,22 +4,25 @@ import { useState } from "react";
 
 export default function SellPage() {
 
-  const [title, setTitle] = useState("");
-  const [price, setPrice] = useState("");
-  const [image, setImage] = useState("");
+  const [title,setTitle] = useState("");
+  const [price,setPrice] = useState("");
+  const [image,setImage] = useState("");
+  const [uploading,setUploading] = useState(false);
 
-  async function uploadImage(file: File) {
+  async function uploadImage(file:File){
+
+    setUploading(true);
 
     const formData = new FormData();
 
-    formData.append("file", file);
-    formData.append("upload_preset", "vinted_upload");
+    formData.append("file",file);
+    formData.append("upload_preset","vinted_upload");
 
     const res = await fetch(
       "https://api.cloudinary.com/v1_1/dtfumoro5/image/upload",
       {
-        method: "POST",
-        body: formData
+        method:"POST",
+        body:formData
       }
     );
 
@@ -27,20 +30,34 @@ export default function SellPage() {
 
     setImage(data.secure_url);
 
+    setUploading(false);
+
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e:any){
 
     e.preventDefault();
 
     const token = localStorage.getItem("token");
 
-    if (!token) {
+    if(!token){
 
       alert("Tu dois être connecté");
+      window.location.href="/login";
+      return;
 
-      window.location.href = "/login";
+    }
 
+    if(uploading){
+
+      alert("Upload de l'image en cours...");
+      return;
+
+    }
+
+    if(!image){
+
+      alert("Image obligatoire");
       return;
 
     }
@@ -48,12 +65,12 @@ export default function SellPage() {
     const res = await fetch(
       process.env.NEXT_PUBLIC_API_URL + "/products",
       {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json",
+          Authorization:"Bearer "+token
         },
-        body: JSON.stringify({
+        body:JSON.stringify({
           title,
           price,
           image
@@ -61,13 +78,13 @@ export default function SellPage() {
       }
     );
 
-    if (res.ok) {
+    if(res.ok){
 
       alert("Produit créé");
 
-      window.location.href = "/";
+      window.location.href="/";
 
-    } else {
+    }else{
 
       alert("Erreur création produit");
 
@@ -75,56 +92,61 @@ export default function SellPage() {
 
   }
 
-  return (
+  return(
 
-    <div style={{ padding: 40 }}>
+    <div style={{padding:40}}>
 
       <h1>Vendre un produit</h1>
 
       <form onSubmit={handleSubmit}>
 
         <input
-          placeholder="Titre"
-          value={title}
-          onChange={(e)=>setTitle(e.target.value)}
-          required
+        placeholder="Titre"
+        value={title}
+        onChange={(e)=>setTitle(e.target.value)}
+        required
         />
 
         <br/><br/>
 
         <input
-          placeholder="Prix"
-          value={price}
-          onChange={(e)=>setPrice(e.target.value)}
-          required
+        placeholder="Prix"
+        value={price}
+        onChange={(e)=>setPrice(e.target.value)}
+        required
         />
 
         <br/><br/>
 
         <input
-          type="file"
-          accept="image/*"
-          onChange={(e)=>{
+        type="file"
+        accept="image/*"
+        onChange={(e)=>{
 
-            const file = e.target.files?.[0];
+          const file = e.target.files?.[0];
 
-            if(file){
+          if(file){
 
-              uploadImage(file);
+            uploadImage(file);
 
-            }
+          }
 
-          }}
+        }}
         />
 
         <br/><br/>
+
+        {uploading && (
+
+          <p>Upload de l'image...</p>
+
+        )}
 
         {image && (
 
           <img
-            src={image}
-            width="200"
-            style={{marginTop:20}}
+          src={image}
+          width="200"
           />
 
         )}
