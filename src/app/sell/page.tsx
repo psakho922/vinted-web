@@ -7,11 +7,8 @@ export default function SellPage() {
   const [title,setTitle] = useState("");
   const [price,setPrice] = useState("");
   const [image,setImage] = useState("");
-  const [uploading,setUploading] = useState(false);
 
   async function uploadImage(file:File){
-
-    setUploading(true);
 
     const formData = new FormData();
 
@@ -30,27 +27,26 @@ export default function SellPage() {
 
     setImage(data.secure_url);
 
-    setUploading(false);
-
   }
 
   async function handleSubmit(e:any){
 
     e.preventDefault();
 
-    const token = localStorage.getItem("token");
+    let token = null;
 
-    if(!token){
+    if(typeof window !== "undefined"){
 
-      alert("Tu dois être connecté");
-      window.location.href="/login";
-      return;
+      token = localStorage.getItem("token");
 
     }
 
-    if(uploading){
+    if(!token){
 
-      alert("Upload de l'image en cours...");
+      alert("Session expirée, reconnecte-toi");
+
+      window.location.href="/login";
+
       return;
 
     }
@@ -58,6 +54,7 @@ export default function SellPage() {
     if(!image){
 
       alert("Image obligatoire");
+
       return;
 
     }
@@ -78,6 +75,18 @@ export default function SellPage() {
       }
     );
 
+    if(res.status === 401){
+
+      localStorage.removeItem("token");
+
+      alert("Session expirée");
+
+      window.location.href="/login";
+
+      return;
+
+    }
+
     if(res.ok){
 
       alert("Produit créé");
@@ -86,9 +95,7 @@ export default function SellPage() {
 
     }else{
 
-      const text = await res.text();
-
-      alert("Erreur serveur : " + text);
+      alert("Erreur création produit");
 
     }
 
@@ -137,12 +144,6 @@ export default function SellPage() {
         />
 
         <br/><br/>
-
-        {uploading && (
-
-          <p>Upload de l'image...</p>
-
-        )}
 
         {image && (
 
