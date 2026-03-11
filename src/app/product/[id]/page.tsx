@@ -54,6 +54,14 @@ export default function ProductPage() {
         </button>
       </Link>
 
+      <br/><br/>
+
+      <Link href={"/seller/" + product.userId}>
+        <button>
+          Profil vendeur
+        </button>
+      </Link>
+
     </div>
 
   );
