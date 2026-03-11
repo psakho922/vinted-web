@@ -32,11 +32,11 @@ export default function SellPage() {
           "Content-Type":"application/json",
           Authorization:"Bearer " + token
         },
-        body:JSON.stringify({
-          title,
-          price,
-          image,
-          userId:user.userId
+        body: JSON.stringify({
+          title: title,
+          price: Number(price),
+          image: image,
+          userId: user.userId
         })
       }
     );
