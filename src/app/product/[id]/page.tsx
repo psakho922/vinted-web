@@ -38,6 +38,7 @@ export default function ProductPage() {
 
       <br/>
 
+      {/* Bouton acheter */}
       <Link href="/paiement">
         <button
           style={{
@@ -54,6 +55,24 @@ export default function ProductPage() {
 
       <br/><br/>
 
+      {/* Bouton chat vendeur */}
+      <Link href={"/chat/" + product.userId}>
+        <button
+          style={{
+            padding:12,
+            background:"green",
+            color:"white",
+            border:"none",
+            borderRadius:6
+          }}
+        >
+          Contacter le vendeur
+        </button>
+      </Link>
+
+      <br/><br/>
+
+      {/* Profil vendeur */}
       <Link href={"/seller/" + product.userId}>
         <button>
           Profil vendeur
