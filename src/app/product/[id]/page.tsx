@@ -45,9 +45,7 @@ export default function ProductPage() {
             background:"#2563eb",
             color:"white",
             border:"none",
-            borderRadius:6,
-            cursor:"pointer",
-            fontSize:16
+            borderRadius:6
           }}
         >
           Acheter
