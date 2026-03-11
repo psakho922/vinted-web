@@ -26,13 +26,13 @@ export default function PaiementPage() {
 
       <p>📱 Numéro Wave :</p>
 
-      <h3>77 000 00 00</h3>
+      <h3>77 353 66 13</h3>
 
       <br/>
 
       <p>📱 Numéro Orange Money :</p>
 
-      <h3>77 000 00 00</h3>
+      <h3>77 353 66 13</h3>
 
       <br/>
 
