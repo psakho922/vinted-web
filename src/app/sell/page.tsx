@@ -1,69 +1,84 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function SellPage() {
 
-  const [title,setTitle] = useState("");
-  const [price,setPrice] = useState("");
-  const [image,setImage] = useState("");
+  const [title, setTitle] = useState("");
+  const [price, setPrice] = useState("");
+  const [image, setImage] = useState("");
+  const [token, setToken] = useState("");
 
-  async function handleSubmit(e:any){
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+
+    if (storedToken) {
+      setToken(storedToken);
+    } else {
+      alert("Tu dois être connecté");
+      window.location.href = "/login";
+    }
+
+  }, []);
+
+  async function handleSubmit(e: any) {
 
     e.preventDefault();
 
-    const token = localStorage.getItem("token");
-
-    if(!token){
-
-      alert("Tu dois être connecté");
-
+    if (!image) {
+      alert("Image obligatoire");
       return;
-
     }
 
-    const user = JSON.parse(atob(token.split(".")[1]));
+    try {
 
-    const res = await fetch(
-      process.env.NEXT_PUBLIC_API_URL + "/products",
-      {
-        method:"POST",
-        headers:{
-          "Content-Type":"application/json",
-          Authorization:"Bearer " + token
-        },
-        body: JSON.stringify({
-          title: title,
-          price: Number(price),
-          image: image,
-          userId: user.userId
-        })
+      const res = await fetch(
+        process.env.NEXT_PUBLIC_API_URL + "/products",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token
+          },
+          body: JSON.stringify({
+            title,
+            price,
+            image
+          })
+        }
+      );
+
+      const data = await res.json();
+
+      console.log("RESPONSE:", data);
+
+      if (res.ok) {
+
+        alert("Produit créé !");
+        window.location.href = "/";
+
+      } else {
+
+        alert("Erreur serveur : " + JSON.stringify(data));
+
       }
-    );
 
-    if(res.ok){
+    } catch (error) {
 
-      alert("Produit créé");
-
-      window.location.href="/";
-
-    }else{
-
-      alert("Erreur création produit");
+      console.error("Erreur :", error);
+      alert("Erreur réseau");
 
     }
 
   }
 
-  return(
+  return (
 
-    <div style={{padding:40}}>
+    <div style={{ padding: 40 }}>
 
       <h1>Vendre un produit</h1>
 
       <form onSubmit={handleSubmit}>
-
-        <br/>
 
         <input
           placeholder="Titre"
@@ -76,6 +91,7 @@ export default function SellPage() {
 
         <input
           placeholder="Prix"
+          type="number"
           value={price}
           onChange={(e)=>setPrice(e.target.value)}
           required
@@ -84,53 +100,16 @@ export default function SellPage() {
         <br/><br/>
 
         <input
-          type="file"
-          accept="image/*"
-          onChange={(e)=>{
-
-            const file = e.target.files?.[0];
-
-            if(!file) return;
-
-            const reader = new FileReader();
-
-            reader.onloadend = ()=>{
-
-              setImage(reader.result as string);
-
-            };
-
-            reader.readAsDataURL(file);
-
-          }}
+          placeholder="URL image"
+          value={image}
+          onChange={(e)=>setImage(e.target.value)}
+          required
         />
 
         <br/><br/>
 
-        {image && (
-
-          <img
-            src={image}
-            width="200"
-          />
-
-        )}
-
-        <br/><br/>
-
-        <button
-          type="submit"
-          style={{
-            padding:12,
-            background:"green",
-            color:"white",
-            border:"none",
-            borderRadius:5
-          }}
-        >
-
-          Publier
-
+        <button type="submit">
+          Publier le produit
         </button>
 
       </form>
@@ -138,5 +117,4 @@ export default function SellPage() {
     </div>
 
   );
-
 }
