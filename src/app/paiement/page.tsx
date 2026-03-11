@@ -2,57 +2,76 @@
 
 import { useRouter } from "next/navigation";
 
-export default function PaiementPage(){
+export default function PaiementPage() {
 
-const router = useRouter();
+  const router = useRouter();
 
-function confirmer(){
+  function confirmer() {
 
-alert("Commande confirmée !");
+    alert("Commande confirmée");
 
-router.push("/commande/test");
+    router.push("/commande/test");
 
-}
+  }
 
-return(
+  return (
 
-<div style={{padding:40}}>
+    <div style={{ padding: 40 }}>
 
-<h1>Paiement</h1>
+      <h1>Paiement</h1>
 
-<p>Paye avec Wave ou Orange Money :</p>
+      <h2>Payer avec Wave ou Orange Money</h2>
 
-<h2>Numéro : 77 353 66 13</h2>
+      <br/>
 
-<p>Nom : Bibani Boutique</p>
+      <p>📱 Numéro Wave :</p>
 
-<br/>
+      <h3>77 000 00 00</h3>
 
-<p>1️⃣ Ouvre Wave ou Orange Money</p>
+      <br/>
 
-<p>2️⃣ Envoie le montant</p>
+      <p>📱 Numéro Orange Money :</p>
 
-<p>3️⃣ Clique sur confirmer</p>
+      <h3>77 000 00 00</h3>
 
-<br/>
+      <br/>
 
-<button
-onClick={confirmer}
-style={{
-padding:15,
-background:"green",
-color:"white",
-border:"none",
-borderRadius:5
-}}
->
+      <p>Nom du compte :</p>
 
-J'ai payé
+      <h3>Bibani Boutique</h3>
 
-</button>
+      <br/>
 
-</div>
+      <p>
+        1️⃣ Ouvre Wave ou Orange Money  
+      </p>
 
-)
+      <p>
+        2️⃣ Envoie le montant du produit  
+      </p>
+
+      <p>
+        3️⃣ Clique sur confirmer après paiement  
+      </p>
+
+      <br/>
+
+      <button
+        onClick={confirmer}
+        style={{
+          padding: 15,
+          background: "green",
+          color: "white",
+          border: "none",
+          borderRadius: 5,
+          fontSize: 16
+        }}
+      >
+        J'ai payé
+      </button>
+
+    </div>
+
+  );
 
 }
