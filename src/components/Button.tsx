@@ -1,41 +1,33 @@
 "use client";
 
-import { ReactNode } from "react";
-
-type ButtonProps = {
-  children: ReactNode;
-  type?: "button" | "submit" | "reset";
-  onClick?: () => void;
-};
-
 export default function Button({
   children,
   type = "button",
-  onClick,
-}: ButtonProps) {
+  onClick
+}: {
+  children: any;
+  type?: "button" | "submit";
+  onClick?: any;
+}) {
+
   return (
+
     <button
       type={type}
       onClick={onClick}
       style={{
-        background: "#09b1ba",
+        background: "#2ecc71",
         color: "white",
-        padding: "12px 20px",
+        padding: "10px 20px",
         border: "none",
         borderRadius: "8px",
         cursor: "pointer",
-        fontWeight: "bold",
-        fontSize: "14px",
-        transition: "0.2s",
-      }}
-      onMouseOver={(e) => {
-        e.currentTarget.style.background = "#078a92";
-      }}
-      onMouseOut={(e) => {
-        e.currentTarget.style.background = "#09b1ba";
+        fontWeight: "bold"
       }}
     >
       {children}
     </button>
+
   );
+
 }
