@@ -8,20 +8,55 @@ export default function SellPage() {
   const [price, setPrice] = useState("");
   const [image, setImage] = useState("");
   const [token, setToken] = useState("");
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
 
-    if (storedToken) {
-      setToken(storedToken);
-    } else {
-      alert("Tu dois être connecté");
-      window.location.href = "/login";
+    if (typeof window !== "undefined") {
+
+      const storedToken = localStorage.getItem("token");
+
+      if (!storedToken) {
+        alert("Tu dois être connecté");
+        window.location.href = "/login";
+      } else {
+        setToken(storedToken);
+      }
+
     }
 
   }, []);
 
-  async function handleSubmit(e: any) {
+  async function handleImage(e:any) {
+
+    const file = e.target.files[0];
+
+    if (!file) return;
+
+    setUploading(true);
+
+    const formData = new FormData();
+
+    formData.append("file", file);
+    formData.append("upload_preset", "vinted_upload");
+
+    const res = await fetch(
+      "https://api.cloudinary.com/v1_1/dtfumoro5/image/upload",
+      {
+        method: "POST",
+        body: formData
+      }
+    );
+
+    const data = await res.json();
+
+    setImage(data.secure_url);
+
+    setUploading(false);
+
+  }
+
+  async function handleSubmit(e:any) {
 
     e.preventDefault();
 
@@ -50,8 +85,6 @@ export default function SellPage() {
 
       const data = await res.json();
 
-      console.log("RESPONSE:", data);
-
       if (res.ok) {
 
         alert("Produit créé !");
@@ -65,7 +98,6 @@ export default function SellPage() {
 
     } catch (error) {
 
-      console.error("Erreur :", error);
       alert("Erreur réseau");
 
     }
@@ -100,11 +132,22 @@ export default function SellPage() {
         <br/><br/>
 
         <input
-          placeholder="URL image"
-          value={image}
-          onChange={(e)=>setImage(e.target.value)}
-          required
+          type="file"
+          accept="image/*"
+          onChange={handleImage}
         />
+
+        <br/><br/>
+
+        {uploading && <p>Upload image...</p>}
+
+        {image && (
+          <img
+            src={image}
+            width="200"
+            style={{marginTop:20}}
+          />
+        )}
 
         <br/><br/>
 
@@ -117,4 +160,4 @@ export default function SellPage() {
     </div>
 
   );
-}
+}vv
