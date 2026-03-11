@@ -14,57 +14,12 @@ export default function ProductPage() {
   useEffect(() => {
 
     fetch(process.env.NEXT_PUBLIC_API_URL + "/products/" + id)
-      .then((res) => res.json())
-      .then((data) => {
+      .then(res => res.json())
+      .then(data => {
         setProduct(data);
       });
 
   }, [id]);
-
-  function addToCart() {
-
-    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-
-    cart.push(product);
-
-    localStorage.setItem("cart", JSON.stringify(cart));
-
-    alert("Produit ajouté au panier");
-
-  }
-
-  async function deleteProduct() {
-
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      alert("Tu dois être connecté");
-      return;
-    }
-
-    const res = await fetch(
-      process.env.NEXT_PUBLIC_API_URL + "/products/" + id,
-      {
-        method: "DELETE",
-        headers: {
-          Authorization: "Bearer " + token
-        }
-      }
-    );
-
-    if (res.ok) {
-
-      alert("Produit supprimé");
-
-      window.location.href = "/";
-
-    } else {
-
-      alert("Erreur suppression");
-
-    }
-
-  }
 
   if (!product) return <p>Chargement...</p>;
 
@@ -77,48 +32,31 @@ export default function ProductPage() {
       <img
         src={product.image}
         width="400"
-        style={{ marginTop: 20 }}
+        style={{ marginTop: 20, borderRadius: 10 }}
       />
 
-      <p style={{ fontSize: 20 }}>
+      <p style={{ fontSize: 20, marginTop: 20 }}>
         {product.price} FCFA
       </p>
 
-      <br/>
-
-      <button
-        onClick={addToCart}
-        style={{ padding:10 }}
-      >
-        Ajouter au panier
-      </button>
-
-      <br/><br/>
+      <br />
 
       <Link href="/acheter">
-        <button style={{ padding:10 }}>
+        <button style={{ padding: 10 }}>
           Acheter
         </button>
       </Link>
 
-      <br/><br/>
+      <br /><br />
 
-      <Link href={"/seller/" + product.userId}>
-        <button>
-          Profil vendeur
+      <Link href={"/chat/" + product.id}>
+        <button style={{ padding: 10 }}>
+          Poser une question au vendeur
         </button>
       </Link>
-
-      <br/><br/>
-
-      <button
-        onClick={deleteProduct}
-        style={{ background: "red", color: "white", padding:10 }}
-      >
-        Supprimer
-      </button>
 
     </div>
 
   );
+
 }
