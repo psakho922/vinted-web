@@ -1,9 +1,15 @@
-/**
- * AUDIT DOC:
- * - Configuration Next.js (front boutique pédagogique).
- */
+/** @type {import('next').NextConfig} */
+
 const nextConfig = {
-  reactStrictMode: true,
+
+  images: {
+    domains: [
+      "res.cloudinary.com"
+    ]
+  },
+
+  reactStrictMode: true
+
 };
 
-export default nextConfig;
+module.exports = nextConfig;
