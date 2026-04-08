@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
+import { useState } from "react";
 
 export default function HomePage() {
   const products = [
@@ -13,9 +13,9 @@ export default function HomePage() {
   const [cart, setCart] = useState<any[]>([]);
 
   return (
-    <div>
+    <div style={{ padding: "20px" }}>
       {/* MENU */}
-      <nav style={{ display: "flex", gap: "20px" }}>
+      <nav style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
         <Link href="/">Home</Link>
         <Link href="/sell">Sell</Link>
         <Link href="/profil">Profil</Link>
@@ -42,11 +42,7 @@ export default function HomePage() {
             <p>Commission (10%) : {commission} FCFA</p>
             <p>Total : {total} FCFA</p>
 
-            <button
-              onClick={() => {
-                setCart([...cart, product]);
-              }}
-            >
+            <button onClick={() => setCart([...cart, product])}>
               Ajouter au panier 🛒
             </button>
           </div>
