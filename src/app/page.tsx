@@ -40,12 +40,21 @@ export default function Page() {
 
   return (
     <div style={{ fontFamily: "Arial, sans-serif", padding: "20px" }}>
+      {/* 🔹 Test Render */}
+      <p style={{color: "red"}}>Test Render</p>
+
       {/* 🔹 Menu */}
       <nav style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
-        <span style={{ cursor: "pointer", fontWeight: view === "marketplace" ? "bold" : "normal" }} onClick={() => setView("marketplace")}>
+        <span
+          style={{ cursor: "pointer", fontWeight: view === "marketplace" ? "bold" : "normal" }}
+          onClick={() => setView("marketplace")}
+        >
           Marketplace
         </span>
-        <span style={{ cursor: "pointer", fontWeight: view === "panier" ? "bold" : "normal" }} onClick={() => setView("panier")}>
+        <span
+          style={{ cursor: "pointer", fontWeight: view === "panier" ? "bold" : "normal" }}
+          onClick={() => setView("panier")}
+        >
           Panier ({cart.length})
         </span>
       </nav>
