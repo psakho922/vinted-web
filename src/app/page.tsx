@@ -1,78 +1,73 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 
-export default function SellPage() {
-  const [title, setTitle] = useState("");
-  const [price, setPrice] = useState("");
-  const [image, setImage] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
+export default function HomePage(){
 
-  const handleSubmit = async () => {
-    if (!title || !price || !image) {
-      alert("Remplis tous les champs");
-      return;
-    }
+  const [products,setProducts] = useState([]);
 
-    setLoading(true);
+  useEffect(()=>{
 
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("price", price);
-    formData.append("image", image);
+    fetch(process.env.NEXT_PUBLIC_API_URL + "/products")
+      .then(res=>res.json())
+      .then(data=>{
 
-    try {
-      const res = await fetch(
-        process.env.NEXT_PUBLIC_API_URL + "/products",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+        setProducts(data);
 
-      const data = await res.json();
+      });
 
-      alert("Produit ajouté !");
-      setTitle("");
-      setPrice("");
-      setImage(null);
-    } catch (error) {
-      console.log(error);
-      alert("Erreur");
-    }
+  },[]);
 
-    setLoading(false);
-  };
+  return(
 
-  return (
-    <div style={{ padding: "20px" }}>
-      <h1>Vendre un produit</h1>
+    <div>
 
-      <input
-        placeholder="Nom du produit"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        style={{ display: "block", marginBottom: "10px", padding: "10px" }}
-      />
+      <h2>Marketplace</h2>
 
-      <input
-        placeholder="Prix"
-        type="number"
-        value={price}
-        onChange={(e) => setPrice(e.target.value)}
-        style={{ display: "block", marginBottom: "10px", padding: "10px" }}
-      />
+      <div
+        style={{
+          display:"grid",
+          gridTemplateColumns:"repeat(auto-fill,minmax(250px,1fr))",
+          gap:"20px",
+          marginTop:"20px"
+        }}
+      >
 
-      {/* ✅ UPLOAD IMAGE */}
-      <input
-        type="file"
-        onChange={(e: any) => setImage(e.target.files[0])}
-        style={{ marginBottom: "10px" }}
-      />
+        {products.map((product:any)=>(
 
-      <button onClick={handleSubmit} disabled={loading}>
-        {loading ? "Envoi..." : "Ajouter le produit"}
-      </button>
+          <div
+            key={product.id}
+            style={{
+              background:"#fff",
+              padding:"15px",
+              borderRadius:"10px",
+              boxShadow:"0 5px 10px rgba(0,0,0,0.1)"
+            }}
+          >
+
+            <img
+              src={product.image}
+              width="100%"
+              style={{
+                height:"200px",
+                objectFit:"cover",
+                borderRadius:"10px"
+              }}
+            />
+
+            <h3>{product.title}</h3>
+
+            <p>{product.price} FCFA</p>
+
+          </div>
+
+        ))}
+
+      </div>
+
     </div>
+
   );
+
 }
