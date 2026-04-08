@@ -15,13 +15,31 @@ export default function PageProduits() {
     { id: 3, nom: "Produit C", prix: 20000 },
   ];
 
-  const [cart, setCart] = useState<{ produit: Produit; total: number }[]>([]);
+  const [cart, setCart] = useState<{ produit: Produit; total: number; quantite: number }[]>([]);
 
   const ajouterAuPanier = (produit: Produit) => {
     const commission = produit.prix * 0.1;
     const total = produit.prix + commission;
-    setCart([...cart, { produit, total }]);
+
+    // Vérifier si produit déjà dans le panier
+    const existing = cart.find((item) => item.produit.id === produit.id);
+    if (existing) {
+      setCart(
+        cart.map((item) =>
+          item.produit.id === produit.id
+            ? { ...item, quantite: item.quantite + 1, total: item.total + total }
+            : item
+        )
+      );
+    } else {
+      setCart([...cart, { produit, total, quantite: 1 }]);
+    }
+
     alert(`Produit ajouté au panier ! Total : ${total} FCFA`);
+  };
+
+  const supprimerDuPanier = (id: number) => {
+    setCart(cart.filter((item) => item.produit.id !== id));
   };
 
   const totalPanier = cart.reduce((acc, item) => acc + item.total, 0);
@@ -71,9 +89,15 @@ export default function PageProduits() {
         <p>Votre panier est vide.</p>
       ) : (
         <ul>
-          {cart.map((item, index) => (
-            <li key={index}>
-              {item.produit.nom} - Total : {item.total} FCFA
+          {cart.map((item) => (
+            <li key={item.produit.id}>
+              {item.produit.nom} x {item.quantite} - Total : {item.total} FCFA{" "}
+              <button
+                onClick={() => supprimerDuPanier(item.produit.id)}
+                style={{ marginLeft: "10px", color: "red", cursor: "pointer" }}
+              >
+                Supprimer
+              </button>
             </li>
           ))}
         </ul>
