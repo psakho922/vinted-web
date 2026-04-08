@@ -11,11 +11,16 @@ export default function SellPage() {
     e.preventDefault();
 
     if (!name || !price) {
-      alert("Remplis tous les champs");
+      alert("Veuillez remplir tous les champs");
       return;
     }
 
-    alert(`Produit ajouté : ${name} - ${price} FCFA`);
+    const commission = Number(price) * 0.1;
+    const total = Number(price) + commission;
+
+    alert(
+      `Produit ajouté ✅\nNom: ${name}\nPrix: ${price} FCFA\nCommission: ${commission} FCFA\nTotal: ${total} FCFA`
+    );
 
     setName("");
     setPrice("");
@@ -37,9 +42,10 @@ export default function SellPage() {
           <label>Nom du produit</label>
           <input
             type="text"
+            placeholder="Ex: Chaussures"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            style={{ width: "100%", padding: "5px" }}
+            style={{ width: "100%", padding: "8px" }}
           />
         </div>
 
@@ -47,13 +53,16 @@ export default function SellPage() {
           <label>Prix (FCFA)</label>
           <input
             type="number"
+            placeholder="Ex: 15000"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
-            style={{ width: "100%", padding: "5px" }}
+            style={{ width: "100%", padding: "8px" }}
           />
         </div>
 
-        <button type="submit">Ajouter le produit</button>
+        <button type="submit" style={{ padding: "10px" }}>
+          Ajouter le produit
+        </button>
       </form>
     </div>
   );
