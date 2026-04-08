@@ -1,12 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true, // build plus rapide et optimisé
+  swcMinify: true,
   images: {
     domains: [
-      "res.cloudinary.com", // pour tes images Cloudinary
-      "i.ibb.co",           // pour images hébergées sur i.ibb.co
-      "avatars.githubusercontent.com" // si tu utilises avatars GitHub
+      "res.cloudinary.com",
+      "i.ibb.co",
+      "avatars.githubusercontent.com",
     ],
   },
   env: {
@@ -14,10 +14,10 @@ const nextConfig = {
     NEXT_PUBLIC_OTHER_VAR: process.env.NEXT_PUBLIC_OTHER_VAR || "",
   },
   compiler: {
-    styledComponents: true, // si tu utilises styled-components
+    styledComponents: true,
   },
   experimental: {
-    appDir: true, // si tu utilises le nouveau dossier /app de Next.js 13+
+    appDir: true,
   },
 };
 
