@@ -1,98 +1,84 @@
 "use client";
 
-import { useEffect,useState } from "react";
-import Link from "next/link";
+import { useState } from "react";
 
-export default function HomePage(){
+type Produit = {
+  id: number;
+  nom: string;
+  prix: number;
+};
 
-  const [products,setProducts] = useState([]);
+export default function PageProduits() {
+  const produits: Produit[] = [
+    { id: 1, nom: "Produit A", prix: 10000 },
+    { id: 2, nom: "Produit B", prix: 15000 },
+    { id: 3, nom: "Produit C", prix: 20000 },
+  ];
 
-  useEffect(()=>{
+  const [cart, setCart] = useState<{ produit: Produit; total: number }[]>([]);
 
-    fetch(process.env.NEXT_PUBLIC_API_URL + "/products")
-      .then(res=>res.json())
-      .then(data=>{
+  const ajouterAuPanier = (produit: Produit) => {
+    const commission = produit.prix * 0.1;
+    const total = produit.prix + commission;
+    setCart([...cart, { produit, total }]);
+    alert(`Produit ajouté au panier ! Total : ${total} FCFA`);
+  };
 
-        setProducts(data);
+  const totalPanier = cart.reduce((acc, item) => acc + item.total, 0);
 
-      });
-
-  },[]);
-
-  return(
-
-    <div>
-
-      <h1>Marketplace</h1>
-
-      <div
-        style={{
-
-          display:"grid",
-          gridTemplateColumns:"repeat(auto-fill,minmax(250px,1fr))",
-          gap:"30px",
-          marginTop:"30px"
-
-        }}
-      >
-
-        {products.map((product:any)=>(
-
-          <Link
-            key={product.id}
-            href={"/product/" + product.id}
-            style={{textDecoration:"none"}}
-          >
-
+  return (
+    <div style={{ fontFamily: "Arial, sans-serif", padding: "20px" }}>
+      <h1>Nos Produits</h1>
+      <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
+        {produits.map((p) => {
+          const commission = p.prix * 0.1;
+          const total = p.prix + commission;
+          return (
             <div
+              key={p.id}
               style={{
-
-                background:"#fff",
-                padding:"20px",
-                borderRadius:"10px",
-                boxShadow:"0 5px 20px rgba(0,0,0,0.05)",
-                cursor:"pointer"
-
+                border: "1px solid #ccc",
+                borderRadius: "8px",
+                padding: "15px",
+                width: "200px",
               }}
             >
-
-              <img
-                src={product.image || "https://via.placeholder.com/300"}
-                width="100%"
+              <h2>{p.nom}</h2>
+              <p>Prix : {p.prix} FCFA</p>
+              <p>Commission (10%) : {commission} FCFA</p>
+              <p>Total : {total} FCFA</p>
+              <button
+                onClick={() => ajouterAuPanier(p)}
                 style={{
-                  borderRadius:"10px",
-                  height:"200px",
-                  objectFit:"cover"
-                }}
-              />
-
-              <h3 style={{marginTop:"10px"}}>
-
-                {product.title}
-
-              </h3>
-
-              <p
-                style={{
-                  fontWeight:"bold",
-                  color:"#09b1ba"
+                  backgroundColor: "#0070f3",
+                  color: "white",
+                  padding: "10px",
+                  border: "none",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                  marginTop: "10px",
                 }}
               >
-
-                {product.price} FCFA
-
-              </p>
-
+                Ajouter au panier
+              </button>
             </div>
-
-          </Link>
-
-        ))}
-
+          );
+        })}
       </div>
 
+      <h2 style={{ marginTop: "30px" }}>Panier</h2>
+      {cart.length === 0 ? (
+        <p>Votre panier est vide.</p>
+      ) : (
+        <ul>
+          {cart.map((item, index) => (
+            <li key={index}>
+              {item.produit.nom} - Total : {item.total} FCFA
+            </li>
+          ))}
+        </ul>
+      )}
+      {cart.length > 0 && <h3>Total Panier : {totalPanier} FCFA</h3>}
     </div>
-
   );
-
 }
