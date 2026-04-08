@@ -1,46 +1,46 @@
-import "./globals.css";
-import { ReactNode } from "react";
-
-export const metadata = {
-  title: "Bibani Boutique",
-  description: "Marketplace de vêtements"
-};
+import Link from "next/link";
 
 export default function RootLayout({
   children,
 }: {
-  children: ReactNode;
+  children: React.ReactNode;
 }) {
   return (
     <html lang="fr">
       <body
         style={{
-          margin: 0,
-          fontFamily: "Arial, sans-serif",
-          background: "#f6f6f6",
+          fontFamily: "Arial",
+          padding: "20px",
+          background: "#f5f5f5",
         }}
       >
-        <nav
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: "20px",
-            background: "#ffffff",
-            borderBottom: "1px solid #ddd",
-          }}
-        >
-          <h2 style={{ color: "#09b1ba" }}>Bibani Boutique</h2>
+        <h1 style={{ marginBottom: "20px" }}>Bibani Boutique</h1>
 
-          <div style={{ display: "flex", gap: "20px" }}>
-            <a href="/">Home</a>
-            <a href="/sell">Sell</a>
-            <a href="/panier">Panier</a>
-            <a href="/profile">Profil</a>
-          </div>
+        <nav style={{ marginBottom: "30px" }}>
+          <Link href="/" style={{ marginRight: "15px" }}>
+            Home
+          </Link>
+
+          <Link href="/sell" style={{ marginRight: "15px" }}>
+            Sell
+          </Link>
+
+          <Link href="/panier" style={{ marginRight: "15px" }}>
+            Panier
+          </Link>
+
+          <Link href="/profil">Profil</Link>
         </nav>
 
-        <main style={{ padding: "40px" }}>{children}</main>
+        <div
+          style={{
+            background: "#fff",
+            padding: "20px",
+            borderRadius: "10px",
+          }}
+        >
+          {children}
+        </div>
       </body>
     </html>
   );
