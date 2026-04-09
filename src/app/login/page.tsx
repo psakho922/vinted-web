@@ -5,8 +5,8 @@ export default function Login(){
   const login = () => {
 
     const user = {
-      name: "Penda",
-      email: "user@gmail.com"
+      name: "Penda Sakho",
+      email: "penda@gmail.com"
     };
 
     localStorage.setItem("user", JSON.stringify(user));
@@ -16,11 +16,20 @@ export default function Login(){
 
   return(
 
-    <div>
+    <div style={{padding:"20px"}}>
 
       <h2>Connexion</h2>
 
-      <button onClick={login}>
+      <button
+        onClick={login}
+        style={{
+          padding:"10px",
+          background:"#09b1ba",
+          color:"#fff",
+          border:"none",
+          borderRadius:"5px"
+        }}
+      >
         Se connecter
       </button>
 
