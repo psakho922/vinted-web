@@ -1,36 +1,42 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
 
-export default function OrderPage() {
+export default function CommandePage(){
 
-  const params = useParams();
-  const id = params.id as string;
+  const [orders,setOrders] = useState<any[]>([]);
 
-  const [order, setOrder] = useState<any>(null);
+  useEffect(()=>{
+    const data = JSON.parse(localStorage.getItem("orders") || "[]");
+    setOrders(data);
+  },[]);
 
-  useEffect(() => {
+  return(
 
-    fetch(
-      process.env.NEXT_PUBLIC_API_URL + "/orders/" + id
-    )
-      .then(res => res.json())
-      .then(data => setOrder(data));
+    <div style={{padding:"20px"}}>
 
-  }, [id]);
+      <h2>Mes commandes</h2>
 
-  if (!order) return <p>Chargement...</p>;
+      {orders.length === 0 && <p>Aucune commande</p>}
 
-  return (
+      {orders.map((order,index)=>(
 
-    <div style={{ padding: 40 }}>
+        <div
+          key={index}
+          style={{
+            background:"#fff",
+            padding:"15px",
+            borderRadius:"10px",
+            marginBottom:"15px"
+          }}
+        >
 
-      <h1>📦 Suivi de commande</h1>
+          <p><strong>Total :</strong> {order.total} FCFA</p>
+          <p><strong>Date :</strong> {order.date}</p>
 
-      <p>Status :</p>
+        </div>
 
-      <h2>{order.status}</h2>
+      ))}
 
     </div>
 
