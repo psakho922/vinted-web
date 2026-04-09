@@ -24,6 +24,7 @@ export default function RootLayout({
             <a href="/" style={{marginRight:"20px"}}>Home</a>
             <a href="/sell" style={{marginRight:"20px"}}>Sell</a>
             <a href="/panier" style={{marginRight:"20px"}}>Panier</a>
+            <a href="/commande" style={{marginRight:"20px"}}>Commandes</a>
             <a href="/profil">Profil</a>
           </div>
 
