@@ -7,8 +7,12 @@ export default function CommandePage(){
   const [orders,setOrders] = useState<any[]>([]);
 
   useEffect(()=>{
-    const data = JSON.parse(localStorage.getItem("orders") || "[]");
-    setOrders(data);
+
+    if (typeof window !== "undefined") {
+      const data = JSON.parse(localStorage.getItem("orders") || "[]");
+      setOrders(data);
+    }
+
   },[]);
 
   return(
