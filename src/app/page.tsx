@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 
 export default function HomePage(){
 
@@ -18,6 +17,17 @@ export default function HomePage(){
       });
 
   },[]);
+
+  const addToCart = (product:any) => {
+
+    let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+    cart.push(product);
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    alert("Produit ajouté au panier !");
+  };
 
   return(
 
@@ -58,7 +68,24 @@ export default function HomePage(){
 
             <h3>{product.title}</h3>
 
-            <p>{product.price} FCFA</p>
+            <p style={{fontWeight:"bold"}}>
+              {product.price} FCFA
+            </p>
+
+            <button
+              onClick={()=>addToCart(product)}
+              style={{
+                marginTop:"10px",
+                padding:"10px",
+                background:"#09b1ba",
+                color:"#fff",
+                border:"none",
+                borderRadius:"5px",
+                cursor:"pointer"
+              }}
+            >
+              Ajouter au panier
+            </button>
 
           </div>
 
