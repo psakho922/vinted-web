@@ -1,83 +1,98 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import Link from "next/link";
+import { useEffect, useState } from "react";
 
-export default function ProductPage() {
+export default function ProductPage(){
 
   const params = useParams();
-  const id = params.id as string;
+  const id = params?.id;
 
   const [product,setProduct] = useState<any>(null);
 
   useEffect(()=>{
 
-    fetch(process.env.NEXT_PUBLIC_API_URL + "/products/" + id)
+    fetch("https://vinted-api-clean.onrender.com/products")
       .then(res=>res.json())
-      .then(data=>setProduct(data));
+      .then(data=>{
+        const found = data.find((p:any)=>p.id == id);
+        setProduct(found);
+      });
 
   },[id]);
 
-  if(!product) return <p>Chargement...</p>;
+  const addToCart = () => {
+
+    let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+    cart.push(product);
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    alert("Produit ajouté au panier !");
+  };
+
+  const deleteProduct = () => {
+
+    let products = JSON.parse(localStorage.getItem("products") || "[]");
+
+    const updated = products.filter((p:any)=>p.id != product.id);
+
+    localStorage.setItem("products", JSON.stringify(updated));
+
+    alert("Produit supprimé ❌");
+
+    window.location.href = "/";
+  };
+
+  if(!product){
+    return <p>Chargement...</p>;
+  }
 
   return(
 
-    <div style={{padding:40}}>
-
-      <h1>{product.title}</h1>
+    <div style={{padding:"20px"}}>
 
       <img
         src={product.image}
-        width="400"
+        width="300"
+        style={{borderRadius:"10px"}}
       />
 
-      <p style={{fontSize:20}}>
-        {product.price} FCFA
-      </p>
+      <h2>{product.title}</h2>
 
-      <br/>
+      <p>{product.price} FCFA</p>
 
-      {/* Bouton acheter */}
-      <Link href="/paiement">
-        <button
-          style={{
-            padding:12,
-            background:"#2563eb",
-            color:"white",
-            border:"none",
-            borderRadius:6
-          }}
-        >
-          Acheter
-        </button>
-      </Link>
+      {/* 🛒 ACHETER */}
+      <button
+        onClick={addToCart}
+        style={{
+          marginTop:"10px",
+          padding:"10px",
+          background:"#09b1ba",
+          color:"#fff",
+          border:"none",
+          borderRadius:"8px",
+          marginRight:"10px"
+        }}
+      >
+        Acheter
+      </button>
 
-      <br/><br/>
-
-      {/* Bouton chat vendeur */}
-      <Link href={"/chat/" + product.userId}>
-        <button
-          style={{
-            padding:12,
-            background:"green",
-            color:"white",
-            border:"none",
-            borderRadius:6
-          }}
-        >
-          Contacter le vendeur
-        </button>
-      </Link>
-
-      <br/><br/>
-
-      {/* Profil vendeur */}
-      <Link href={"/seller/" + product.userId}>
-        <button>
-          Profil vendeur
-        </button>
-      </Link>
+      {/* ❌ SUPPRIMER */}
+      <button
+        onClick={deleteProduct}
+        style={{
+          marginTop:"10px",
+          padding:"10px",
+          background:"red",
+          color:"#fff",
+          border:"none",
+          borderRadius:"8px"
+        }}
+      >
+        Supprimer
+      </button>
 
     </div>
 
