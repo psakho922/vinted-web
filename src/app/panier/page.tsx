@@ -2,64 +2,74 @@
 
 import { useEffect, useState } from "react";
 
-export default function PanierPage() {
+export default function PanierPage(){
 
-  const [cart, setCart] = useState<any[]>([]);
+  const [cart,setCart] = useState<any[]>([]);
 
-  useEffect(() => {
+  useEffect(()=>{
+    const data = JSON.parse(localStorage.getItem("cart") || "[]");
+    setCart(data);
+  },[]);
 
-    const savedCart = localStorage.getItem("cart");
-
-    if (savedCart) {
-      setCart(JSON.parse(savedCart));
-    }
-
-  }, []);
-
-  const total = cart.reduce((sum, p) => sum + p.price, 0);
-
-  function removeItem(index:number){
-
-    const newCart = [...cart];
-
+  const removeItem = (index:number) => {
+    let newCart = [...cart];
     newCart.splice(index,1);
-
     setCart(newCart);
-
     localStorage.setItem("cart", JSON.stringify(newCart));
+  };
 
-  }
+  const total = cart.reduce((sum,item)=> sum + Number(item.price),0);
+  const commission = Math.round(total * 0.1);
+  const finalTotal = total + commission;
 
-  function payCart(){
+  // 💳 PAIEMENT + ENREGISTRER COMMANDE
+  const payer = () => {
 
-    window.location.href = "/acheter";
+    const order = {
+      total: finalTotal,
+      date: new Date().toLocaleString()
+    };
 
-  }
+    let orders = JSON.parse(localStorage.getItem("orders") || "[]");
 
-  return (
+    orders.push(order);
 
-    <div style={{padding:40}}>
+    localStorage.setItem("orders", JSON.stringify(orders));
 
-      <h1>Mon panier</h1>
+    alert("Paiement réussi ✅");
+
+    localStorage.removeItem("cart");
+    setCart([]);
+  };
+
+  return(
+
+    <div style={{padding:"20px"}}>
+
+      <h2>Mon panier</h2>
 
       {cart.length === 0 && <p>Panier vide</p>}
 
-      {cart.map((product, index) => (
+      {cart.map((item,index)=>(
 
-        <div key={index} style={{marginBottom:30}}>
+        <div
+          key={index}
+          style={{
+            display:"flex",
+            justifyContent:"space-between",
+            marginBottom:"15px",
+            padding:"10px",
+            background:"#fff",
+            borderRadius:"10px"
+          }}
+        >
 
-          <img
-            src={product.image}
-            width="200"
-          />
+          <div>
+            <p>{item.title}</p>
+            <p>{item.price} FCFA</p>
+          </div>
 
-          <h3>{product.title}</h3>
-
-          <p>{product.price} FCFA</p>
-
-          <button
-            onClick={()=>removeItem(index)}
-          >
+          <button onClick={()=>removeItem(index)}>
             Supprimer
           </button>
 
@@ -67,24 +77,39 @@ export default function PanierPage() {
 
       ))}
 
-      <h2>Total : {total} FCFA</h2>
+      {cart.length > 0 && (
 
-      <br/>
+        <div style={{marginTop:"20px"}}>
 
-      <button
-        onClick={payCart}
-        style={{
-          padding:12,
-          background:"green",
-          color:"white",
-          border:"none",
-          fontSize:18
-        }}
-      >
-        Payer le panier
-      </button>
+          <p><strong>Total :</strong> {total} FCFA</p>
+
+          <p style={{color:"#09b1ba"}}>
+            <strong>Commission :</strong> {commission} FCFA
+          </p>
+
+          <h3>Total à payer : {finalTotal} FCFA</h3>
+
+          <button
+            onClick={payer}
+            style={{
+              marginTop:"20px",
+              padding:"15px",
+              width:"100%",
+              background:"#09b1ba",
+              color:"#fff",
+              border:"none",
+              borderRadius:"10px"
+            }}
+          >
+            Payer maintenant
+          </button>
+
+        </div>
+
+      )}
 
     </div>
 
   );
+
 }
