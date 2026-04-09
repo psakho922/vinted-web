@@ -1,97 +1,67 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import { useState } from "react";
 
-export default function ChatPage() {
+export default function ChatPage(){
 
   const params = useParams();
+  const productId = params?.productId;
 
-  const productId = params.productId as string;
+  const [message,setMessage] = useState("");
+  const [messages,setMessages] = useState<string[]>([]);
 
-  const [messages, setMessages] = useState<any[]>([]);
-  const [text, setText] = useState("");
+  const sendMessage = () => {
 
-  const senderId = "acheteur";
-  const receiverId = "vendeur";
+    if(!message) return;
 
-  useEffect(() => {
+    setMessages([...messages,message]);
+    setMessage("");
+  };
 
-    fetch(
-      process.env.NEXT_PUBLIC_API_URL +
-      "/messages?productId=" + productId
-    )
-      .then(res => res.json())
-      .then(data => setMessages(data));
+  return(
 
-  }, [productId]);
+    <div style={{padding:"20px"}}>
 
-  async function sendMessage() {
+      <h2>Chat vendeur</h2>
 
-    await fetch(
-      process.env.NEXT_PUBLIC_API_URL + "/messages",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          text,
-          senderId,
-          receiverId,
-          productId
-        })
-      }
-    );
+      <p>Produit ID : {productId}</p>
 
-    setText("");
+      {/* messages */}
+      <div style={{marginTop:"20px"}}>
 
-    location.reload();
-
-  }
-
-  return (
-
-    <div style={{ padding: 40 }}>
-
-      <h1>Questions sur ce produit</h1>
-
-      <div
-        style={{
-          border: "1px solid #ddd",
-          padding: 20,
-          height: 300,
-          overflow: "auto",
-          marginBottom: 20
-        }}
-      >
-
-        {messages.map((m: any) => (
-
-          <p key={m.id}>
-            <strong>{m.senderId}</strong> : {m.text}
+        {messages.map((msg,index)=>(
+          <p key={index} style={{
+            background:"#eee",
+            padding:"10px",
+            borderRadius:"10px",
+            marginBottom:"10px"
+          }}>
+            {msg}
           </p>
-
         ))}
 
       </div>
 
-      <input
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="Poser une question"
-        style={{ padding: 10, width: "70%" }}
-      />
+      {/* input */}
+      <div style={{marginTop:"20px"}}>
 
-      <button
-        onClick={sendMessage}
-        style={{
-          padding: 10,
-          marginLeft: 10
-        }}
-      >
-        Envoyer
-      </button>
+        <input
+          value={message}
+          onChange={(e)=>setMessage(e.target.value)}
+          placeholder="Écrire un message..."
+          style={{
+            padding:"10px",
+            width:"70%",
+            marginRight:"10px"
+          }}
+        />
+
+        <button onClick={sendMessage}>
+          Envoyer
+        </button>
+
+      </div>
 
     </div>
 
