@@ -9,7 +9,7 @@ export default function RootLayout({
     <html lang="fr">
       <body>
 
-        <div style={{
+        <nav style={{
           display:"flex",
           justifyContent:"space-between",
           padding:"15px",
@@ -24,9 +24,11 @@ export default function RootLayout({
             <a href="/panier" style={{marginRight:"15px", color:"#fff"}}>Panier</a>
             <a href="/profil" style={{color:"#fff"}}>Profil</a>
           </div>
-        </div>
+        </nav>
 
-        {children}
+        <main>
+          {children}
+        </main>
 
       </body>
     </html>
