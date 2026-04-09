@@ -2,96 +2,89 @@
 
 import { useEffect, useState } from "react";
 
-export default function HomePage(){
+export default function PanierPage(){
 
-  const [products,setProducts] = useState([]);
+  const [cart,setCart] = useState([]);
 
   useEffect(()=>{
 
-    fetch(process.env.NEXT_PUBLIC_API_URL + "/products")
-      .then(res=>res.json())
-      .then(data=>{
-
-        setProducts(data);
-
-      });
+    const data = JSON.parse(localStorage.getItem("cart") || "[]");
+    setCart(data);
 
   },[]);
 
-  const addToCart = (product:any) => {
+  const removeItem = (index:number) => {
 
-    let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    let newCart = [...cart];
+    newCart.splice(index,1);
 
-    cart.push(product);
-
-    localStorage.setItem("cart", JSON.stringify(cart));
-
-    alert("Produit ajouté au panier !");
+    setCart(newCart);
+    localStorage.setItem("cart", JSON.stringify(newCart));
   };
+
+  const total = cart.reduce((sum:any,item:any)=>sum + item.price,0);
+
+  const commission = total * 0.1;
+
+  const finalTotal = total + commission;
 
   return(
 
     <div>
 
-      <h2>Marketplace</h2>
+      <h2>Mon panier</h2>
 
-      <div
-        style={{
-          display:"grid",
-          gridTemplateColumns:"repeat(auto-fill,minmax(250px,1fr))",
-          gap:"20px",
-          marginTop:"20px"
-        }}
-      >
+      {cart.length === 0 && <p>Panier vide</p>}
 
-        {products.map((product:any)=>(
+      {cart.map((item:any,index:number)=>(
 
-          <div
-            key={product.id}
-            style={{
-              background:"#fff",
-              padding:"15px",
-              borderRadius:"10px",
-              boxShadow:"0 5px 10px rgba(0,0,0,0.1)"
-            }}
-          >
+        <div
+          key={index}
+          style={{
+            display:"flex",
+            justifyContent:"space-between",
+            alignItems:"center",
+            marginBottom:"15px",
+            padding:"10px",
+            background:"#fff",
+            borderRadius:"10px"
+          }}
+        >
 
-            <img
-              src={product.image}
-              width="100%"
-              style={{
-                height:"200px",
-                objectFit:"cover",
-                borderRadius:"10px"
-              }}
-            />
-
-            <h3>{product.title}</h3>
-
-            <p style={{fontWeight:"bold"}}>
-              {product.price} FCFA
-            </p>
-
-            <button
-              onClick={()=>addToCart(product)}
-              style={{
-                marginTop:"10px",
-                padding:"10px",
-                background:"#09b1ba",
-                color:"#fff",
-                border:"none",
-                borderRadius:"5px",
-                cursor:"pointer"
-              }}
-            >
-              Ajouter au panier
-            </button>
-
+          <div>
+            <p>{item.title}</p>
+            <p>{item.price} FCFA</p>
           </div>
 
-        ))}
+          <button
+            onClick={()=>removeItem(index)}
+            style={{
+              background:"red",
+              color:"#fff",
+              border:"none",
+              padding:"5px 10px",
+              borderRadius:"5px"
+            }}
+          >
+            Supprimer
+          </button>
 
-      </div>
+        </div>
+
+      ))}
+
+      {cart.length > 0 && (
+
+        <div style={{marginTop:"30px"}}>
+
+          <p>Total : {total} FCFA</p>
+          <p>Commission (10%) : {commission} FCFA</p>
+
+          <h3>Total à payer : {finalTotal} FCFA</h3>
+
+        </div>
+
+      )}
 
     </div>
 
