@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function ChatPage(){
 
@@ -9,13 +9,32 @@ export default function ChatPage(){
   const productId = params?.productId;
 
   const [message,setMessage] = useState("");
-  const [messages,setMessages] = useState<string[]>([]);
+  const [messages,setMessages] = useState<any[]>([]);
 
+  // 🔄 charger messages
+  useEffect(()=>{
+    const data = JSON.parse(localStorage.getItem("messages") || "[]");
+    setMessages(data.filter((m:any)=>m.productId === productId));
+  },[productId]);
+
+  // 📤 envoyer message
   const sendMessage = () => {
 
     if(!message) return;
 
-    setMessages([...messages,message]);
+    const newMessage = {
+      productId,
+      text: message,
+      date: new Date().toLocaleString()
+    };
+
+    let allMessages = JSON.parse(localStorage.getItem("messages") || "[]");
+
+    allMessages.push(newMessage);
+
+    localStorage.setItem("messages", JSON.stringify(allMessages));
+
+    setMessages([...messages,newMessage]);
     setMessage("");
   };
 
@@ -25,36 +44,25 @@ export default function ChatPage(){
 
       <h2>Chat vendeur</h2>
 
-      <p>Produit ID : {productId}</p>
+      {messages.map((msg,index)=>(
+        <div key={index} style={{
+          background:"#eee",
+          padding:"10px",
+          borderRadius:"10px",
+          marginBottom:"10px"
+        }}>
+          <p>{msg.text}</p>
+          <small>{msg.date}</small>
+        </div>
+      ))}
 
-      {/* messages */}
-      <div style={{marginTop:"20px"}}>
-
-        {messages.map((msg,index)=>(
-          <p key={index} style={{
-            background:"#eee",
-            padding:"10px",
-            borderRadius:"10px",
-            marginBottom:"10px"
-          }}>
-            {msg}
-          </p>
-        ))}
-
-      </div>
-
-      {/* input */}
       <div style={{marginTop:"20px"}}>
 
         <input
           value={message}
           onChange={(e)=>setMessage(e.target.value)}
-          placeholder="Écrire un message..."
-          style={{
-            padding:"10px",
-            width:"70%",
-            marginRight:"10px"
-          }}
+          placeholder="Écrire..."
+          style={{padding:"10px", width:"70%"}}
         />
 
         <button onClick={sendMessage}>
