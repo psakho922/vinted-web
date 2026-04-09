@@ -1,19 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 export default function HomePage(){
 
   const [products,setProducts] = useState<any[]>([]);
 
   useEffect(()=>{
-
     fetch(process.env.NEXT_PUBLIC_API_URL + "/products")
       .then(res=>res.json())
-      .then(data=>{
-        setProducts(data);
-      });
-
+      .then(data=>setProducts(data));
   },[]);
 
   const addToCart = (product:any) => {
@@ -29,7 +26,7 @@ export default function HomePage(){
 
   return(
 
-    <div style={{padding:"20px"}}>
+    <div>
 
       <h1>Marketplace</h1>
 
@@ -37,7 +34,7 @@ export default function HomePage(){
         style={{
           display:"grid",
           gridTemplateColumns:"repeat(auto-fill,minmax(250px,1fr))",
-          gap:"20px",
+          gap:"25px",
           marginTop:"20px"
         }}
       >
@@ -49,7 +46,8 @@ export default function HomePage(){
             style={{
               background:"#fff",
               padding:"15px",
-              borderRadius:"10px"
+              borderRadius:"15px",
+              boxShadow:"0 10px 25px rgba(0,0,0,0.05)"
             }}
           >
 
@@ -58,17 +56,49 @@ export default function HomePage(){
               width="100%"
               style={{
                 height:"200px",
-                objectFit:"cover"
+                objectFit:"cover",
+                borderRadius:"10px"
               }}
             />
 
             <h3>{product.title}</h3>
 
-            <p>{product.price} FCFA</p>
+            <p style={{fontWeight:"bold", color:"#09b1ba"}}>
+              {product.price} FCFA
+            </p>
 
-            <button onClick={()=>addToCart(product)}>
+            {/* 🛒 PANIER */}
+            <button
+              onClick={()=>addToCart(product)}
+              style={{
+                marginTop:"10px",
+                padding:"10px",
+                width:"100%",
+                background:"#09b1ba",
+                color:"#fff",
+                border:"none",
+                borderRadius:"8px"
+              }}
+            >
               Ajouter au panier
             </button>
+
+            {/* 💰 ACHETER */}
+            <Link href={"/product/" + product.id}>
+              <button
+                style={{
+                  marginTop:"10px",
+                  padding:"10px",
+                  width:"100%",
+                  background:"#000",
+                  color:"#fff",
+                  border:"none",
+                  borderRadius:"8px"
+                }}
+              >
+                Voir / Acheter
+              </button>
+            </Link>
 
           </div>
 
