@@ -1,16 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 
 export default function HomePage(){
 
   const [products,setProducts] = useState<any[]>([]);
 
   useEffect(()=>{
+
     fetch(process.env.NEXT_PUBLIC_API_URL + "/products")
       .then(res=>res.json())
-      .then(data=>setProducts(data));
+      .then(data=>{
+        setProducts(data);
+      });
+
   },[]);
 
   const addToCart = (product:any) => {
@@ -26,9 +29,14 @@ export default function HomePage(){
 
   return(
 
-    <div>
+    <div style={{padding:"20px"}}>
 
       <h1>Marketplace</h1>
+
+      {/* 🔄 LOADING */}
+      {products.length === 0 && (
+        <p style={{marginTop:"20px"}}>Chargement des produits...</p>
+      )}
 
       <div
         style={{
@@ -67,7 +75,6 @@ export default function HomePage(){
               {product.price} FCFA
             </p>
 
-            {/* 🛒 PANIER */}
             <button
               onClick={()=>addToCart(product)}
               style={{
@@ -82,23 +89,6 @@ export default function HomePage(){
             >
               Ajouter au panier
             </button>
-
-            {/* 💰 ACHETER */}
-            <Link href={"/product/" + product.id}>
-              <button
-                style={{
-                  marginTop:"10px",
-                  padding:"10px",
-                  width:"100%",
-                  background:"#000",
-                  color:"#fff",
-                  border:"none",
-                  borderRadius:"8px"
-                }}
-              >
-                Voir / Acheter
-              </button>
-            </Link>
 
           </div>
 
