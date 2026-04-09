@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 
 export default function Profil(){
 
-  const [user,setUser] = useState<string | null>(null);
+  const [user,setUser] = useState<any>(null);
 
   useEffect(()=>{
-    const u = localStorage.getItem("user");
+    const u = JSON.parse(localStorage.getItem("user") || "null");
     setUser(u);
   },[]);
 
@@ -25,27 +25,10 @@ export default function Profil(){
 
       {!user ? (
 
-        <div
-          style={{
-            background:"#fff",
-            padding:"20px",
-            borderRadius:"15px"
-          }}
-        >
+        <div>
           <p>Tu n'es pas connecté</p>
-
           <a href="/login">
-            <button
-              style={{
-                padding:"10px",
-                background:"#09b1ba",
-                color:"#fff",
-                border:"none",
-                borderRadius:"5px"
-              }}
-            >
-              Se connecter
-            </button>
+            <button>Se connecter</button>
           </a>
         </div>
 
@@ -54,25 +37,46 @@ export default function Profil(){
         <div
           style={{
             background:"#fff",
-            padding:"20px",
+            padding:"25px",
             borderRadius:"15px",
-            boxShadow:"0 5px 20px rgba(0,0,0,0.05)"
+            boxShadow:"0 10px 30px rgba(0,0,0,0.05)",
+            maxWidth:"400px"
           }}
         >
 
-          <h3>Utilisateur connecté ✅</h3>
+          {/* 👤 AVATAR */}
+          <div style={{textAlign:"center"}}>
+            <img
+              src="https://i.pravatar.cc/150"
+              style={{
+                width:"100px",
+                height:"100px",
+                borderRadius:"50%",
+                marginBottom:"15px"
+              }}
+            />
+          </div>
 
-          <p>Email : user@gmail.com</p>
+          {/* INFOS */}
+          <h3 style={{textAlign:"center"}}>
+            {user.name || "Utilisateur"}
+          </h3>
 
+          <p style={{textAlign:"center", color:"#666"}}>
+            {user.email}
+          </p>
+
+          {/* BOUTON */}
           <button
             onClick={logout}
             style={{
-              marginTop:"10px",
-              padding:"10px",
+              marginTop:"20px",
+              padding:"12px",
+              width:"100%",
               background:"red",
               color:"#fff",
               border:"none",
-              borderRadius:"5px"
+              borderRadius:"8px"
             }}
           >
             Se déconnecter
