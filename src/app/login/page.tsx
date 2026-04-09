@@ -3,7 +3,14 @@
 export default function Login(){
 
   const login = () => {
-    localStorage.setItem("user","connected");
+
+    const user = {
+      name: "Penda",
+      email: "user@gmail.com"
+    };
+
+    localStorage.setItem("user", JSON.stringify(user));
+
     alert("Connexion réussie ✅");
   };
 
@@ -13,16 +20,7 @@ export default function Login(){
 
       <h2>Connexion</h2>
 
-      <button
-        onClick={login}
-        style={{
-          padding:"10px",
-          background:"#09b1ba",
-          color:"#fff",
-          border:"none",
-          borderRadius:"5px"
-        }}
-      >
+      <button onClick={login}>
         Se connecter
       </button>
 
