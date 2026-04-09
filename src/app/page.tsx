@@ -2,79 +2,80 @@
 
 import { useEffect, useState } from "react";
 
-export default function HomePage(){
+export default function PanierPage(){
 
-  const [products,setProducts] = useState<any[]>([]);
+  const [cart,setCart] = useState<any[]>([]);
 
   useEffect(()=>{
-
-    fetch(process.env.NEXT_PUBLIC_API_URL + "/products")
-      .then(res=>res.json())
-      .then(data=>{
-        setProducts(data);
-      });
-
+    const data = JSON.parse(localStorage.getItem("cart") || "[]");
+    setCart(data);
   },[]);
 
-  const addToCart = (product:any) => {
+  const removeItem = (index:number) => {
 
-    let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    let newCart = [...cart];
+    newCart.splice(index,1);
 
-    cart.push(product);
-
-    localStorage.setItem("cart", JSON.stringify(cart));
-
-    alert("Produit ajouté au panier !");
+    setCart(newCart);
+    localStorage.setItem("cart", JSON.stringify(newCart));
   };
+
+  // ✅ CALCULS
+  const total = cart.reduce((sum,item)=> sum + Number(item.price),0);
+  const commission = Math.round(total * 0.1);
+  const finalTotal = total + commission;
 
   return(
 
     <div style={{padding:"20px"}}>
 
-      <h1>Marketplace</h1>
+      <h2>Mon panier</h2>
 
-      <div
-        style={{
-          display:"grid",
-          gridTemplateColumns:"repeat(auto-fill,minmax(250px,1fr))",
-          gap:"20px",
-          marginTop:"20px"
-        }}
-      >
+      {cart.length === 0 && <p>Panier vide</p>}
 
-        {products.map((product:any)=>(
+      {cart.map((item,index)=>(
 
-          <div
-            key={product.id}
-            style={{
-              background:"#fff",
-              padding:"15px",
-              borderRadius:"10px"
-            }}
-          >
+        <div
+          key={index}
+          style={{
+            display:"flex",
+            justifyContent:"space-between",
+            marginBottom:"10px",
+            background:"#fff",
+            padding:"10px",
+            borderRadius:"10px"
+          }}
+        >
 
-            <img
-              src={product.image}
-              width="100%"
-              style={{
-                height:"200px",
-                objectFit:"cover"
-              }}
-            />
-
-            <h3>{product.title}</h3>
-
-            <p>{product.price} FCFA</p>
-
-            <button onClick={()=>addToCart(product)}>
-              Ajouter au panier
-            </button>
-
+          <div>
+            <p>{item.title}</p>
+            <p>{item.price} FCFA</p>
           </div>
 
-        ))}
+          <button onClick={()=>removeItem(index)}>
+            Supprimer
+          </button>
 
-      </div>
+        </div>
+
+      ))}
+
+      {/* ✅ AFFICHAGE COMMISSION */}
+      {cart.length > 0 && (
+
+        <div style={{marginTop:"20px"}}>
+
+          <p><strong>Total :</strong> {total} FCFA</p>
+
+          <p style={{color:"#09b1ba"}}>
+            <strong>Commission (10%) :</strong> {commission} FCFA
+          </p>
+
+          <h3>Total à payer : {finalTotal} FCFA</h3>
+
+        </div>
+
+      )}
 
     </div>
 
