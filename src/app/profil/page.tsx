@@ -7,8 +7,10 @@ export default function Profil(){
   const [user,setUser] = useState<any>(null);
 
   useEffect(()=>{
-    const u = JSON.parse(localStorage.getItem("user") || "null");
-    setUser(u);
+    const u = localStorage.getItem("user");
+    if(u){
+      setUser(JSON.parse(u));
+    }
   },[]);
 
   const logout = () => {
@@ -27,8 +29,19 @@ export default function Profil(){
 
         <div>
           <p>Tu n'es pas connecté</p>
+
           <a href="/login">
-            <button>Se connecter</button>
+            <button
+              style={{
+                padding:"10px",
+                background:"#09b1ba",
+                color:"#fff",
+                border:"none",
+                borderRadius:"5px"
+              }}
+            >
+              Se connecter
+            </button>
           </a>
         </div>
 
@@ -40,14 +53,15 @@ export default function Profil(){
             padding:"25px",
             borderRadius:"15px",
             boxShadow:"0 10px 30px rgba(0,0,0,0.05)",
-            maxWidth:"400px"
+            maxWidth:"400px",
+            marginTop:"20px"
           }}
         >
 
-          {/* 👤 AVATAR */}
+          {/* 👤 PHOTO */}
           <div style={{textAlign:"center"}}>
             <img
-              src="https://i.pravatar.cc/150"
+              src="https://i.pravatar.cc/150?img=3"
               style={{
                 width:"100px",
                 height:"100px",
@@ -59,7 +73,7 @@ export default function Profil(){
 
           {/* INFOS */}
           <h3 style={{textAlign:"center"}}>
-            {user.name || "Utilisateur"}
+            {user.name}
           </h3>
 
           <p style={{textAlign:"center", color:"#666"}}>
