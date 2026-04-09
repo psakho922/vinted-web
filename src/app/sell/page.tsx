@@ -1,69 +1,92 @@
-"use client";
+ "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 
-export default function SellPage() {
-  const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
+export default function SellPage(){
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
+  const [title,setTitle] = useState("");
+  const [price,setPrice] = useState("");
+  const [image,setImage] = useState("");
 
-    if (!name || !price) {
-      alert("Veuillez remplir tous les champs");
-      return;
+  const handleImage = (e:any) => {
+
+    const file = e.target.files[0];
+
+    if(file){
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        setImage(reader.result as string);
+      };
+
+      reader.readAsDataURL(file);
     }
-
-    const commission = Number(price) * 0.1;
-    const total = Number(price) + commission;
-
-    alert(
-      `Produit ajouté ✅\nNom: ${name}\nPrix: ${price} FCFA\nCommission: ${commission} FCFA\nTotal: ${total} FCFA`
-    );
-
-    setName("");
-    setPrice("");
   };
 
-  return (
-    <div style={{ padding: "20px" }}>
-      {/* MENU */}
-      <nav style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
-        <Link href="/">Home</Link>
-        <Link href="/sell">Sell</Link>
-        <Link href="/profil">Profil</Link>
-      </nav>
+  const handleSubmit = () => {
 
-      <h1>Vendre un produit</h1>
+    const newProduct = {
+      id: Date.now(),
+      title,
+      price,
+      image
+    };
 
-      <form onSubmit={handleSubmit} style={{ maxWidth: "300px" }}>
-        <div style={{ marginBottom: "10px" }}>
-          <label>Nom du produit</label>
-          <input
-            type="text"
-            placeholder="Ex: Chaussures"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            style={{ width: "100%", padding: "8px" }}
-          />
-        </div>
+    let products = JSON.parse(localStorage.getItem("products") || "[]");
 
-        <div style={{ marginBottom: "10px" }}>
-          <label>Prix (FCFA)</label>
-          <input
-            type="number"
-            placeholder="Ex: 15000"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            style={{ width: "100%", padding: "8px" }}
-          />
-        </div>
+    products.push(newProduct);
 
-        <button type="submit" style={{ padding: "10px" }}>
-          Ajouter le produit
-        </button>
-      </form>
+    localStorage.setItem("products", JSON.stringify(products));
+
+    alert("Produit ajouté ✅");
+
+    setTitle("");
+    setPrice("");
+    setImage("");
+  };
+
+  return(
+
+    <div style={{padding:"20px"}}>
+
+      <h2>Vendre un produit</h2>
+
+      <input
+        placeholder="Nom du produit"
+        value={title}
+        onChange={(e)=>setTitle(e.target.value)}
+        style={{display:"block", marginBottom:"10px", padding:"10px"}}
+      />
+
+      <input
+        placeholder="Prix"
+        value={price}
+        onChange={(e)=>setPrice(e.target.value)}
+        style={{display:"block", marginBottom:"10px", padding:"10px"}}
+      />
+
+      {/* 📸 UPLOAD IMAGE */}
+      <input
+        type="file"
+        accept="image/*"
+        onChange={handleImage}
+        style={{marginBottom:"10px"}}
+      />
+
+      {image && (
+        <img
+          src={image}
+          width="200"
+          style={{display:"block", marginBottom:"10px"}}
+        />
+      )}
+
+      <button onClick={handleSubmit}>
+        Publier
+      </button>
+
     </div>
+
   );
+
 }
