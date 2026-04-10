@@ -8,14 +8,24 @@ export default function HomePage(){
 
   useEffect(()=>{
 
-    // ⚡ 1. Charger depuis localStorage (rapide)
+    // ⚡ 1. Charger localStorage
     const local = JSON.parse(localStorage.getItem("products") || "[]");
 
     if(local.length > 0){
       setProducts(local);
+    } else {
+      // 🔥 fallback immédiat (affiche vite)
+      setProducts([
+        {
+          id:1,
+          title:"Produit test",
+          price:5000,
+          image:"https://via.placeholder.com/300"
+        }
+      ]);
     }
 
-    // 🌐 2. Charger depuis API (lent mais mise à jour)
+    // 🌐 2. Charger API
     fetch("https://vinted-api-clean.onrender.com/products")
       .then(res=>res.json())
       .then(data=>{
@@ -28,24 +38,11 @@ export default function HomePage(){
 
   },[]);
 
-  const addToCart = (product:any) => {
-
-    let cart = JSON.parse(localStorage.getItem("cart") || "[]");
-
-    cart.push(product);
-
-    localStorage.setItem("cart", JSON.stringify(cart));
-
-    alert("Produit ajouté !");
-  };
-
   return(
 
     <div style={{padding:"20px"}}>
 
       <h1>Marketplace</h1>
-
-      {products.length === 0 && <p>Chargement...</p>}
 
       <div style={{
         display:"grid",
@@ -71,10 +68,6 @@ export default function HomePage(){
             <h3>{product.title}</h3>
 
             <p>{product.price} FCFA</p>
-
-            <button onClick={()=>addToCart(product)}>
-              Ajouter au panier
-            </button>
 
           </div>
 
