@@ -8,24 +8,14 @@ export default function HomePage(){
 
   useEffect(()=>{
 
-    // ⚡ 1. Charger localStorage
+    // ⚡ Charger localStorage
     const local = JSON.parse(localStorage.getItem("products") || "[]");
 
     if(local.length > 0){
       setProducts(local);
-    } else {
-      // 🔥 fallback immédiat (affiche vite)
-      setProducts([
-        {
-          id:1,
-          title:"Produit test",
-          price:5000,
-          image:"https://via.placeholder.com/300"
-        }
-      ]);
     }
 
-    // 🌐 2. Charger API
+    // 🌐 Charger API
     fetch("https://vinted-api-clean.onrender.com/products")
       .then(res=>res.json())
       .then(data=>{
@@ -43,6 +33,10 @@ export default function HomePage(){
     <div style={{padding:"20px"}}>
 
       <h1>Marketplace</h1>
+
+      {products.length === 0 && (
+        <p>Chargement des produits...</p>
+      )}
 
       <div style={{
         display:"grid",
