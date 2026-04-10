@@ -8,10 +8,22 @@ export default function HomePage(){
 
   useEffect(()=>{
 
-    fetch(process.env.NEXT_PUBLIC_API_URL + "/products")
+    // ⚡ 1. Charger depuis localStorage (rapide)
+    const local = JSON.parse(localStorage.getItem("products") || "[]");
+
+    if(local.length > 0){
+      setProducts(local);
+    }
+
+    // 🌐 2. Charger depuis API (lent mais mise à jour)
+    fetch("https://vinted-api-clean.onrender.com/products")
       .then(res=>res.json())
       .then(data=>{
         setProducts(data);
+        localStorage.setItem("products", JSON.stringify(data));
+      })
+      .catch(err=>{
+        console.log(err);
       });
 
   },[]);
@@ -24,7 +36,7 @@ export default function HomePage(){
 
     localStorage.setItem("cart", JSON.stringify(cart));
 
-    alert("Produit ajouté au panier !");
+    alert("Produit ajouté !");
   };
 
   return(
@@ -33,60 +45,34 @@ export default function HomePage(){
 
       <h1>Marketplace</h1>
 
-      {/* 🔄 LOADING */}
-      {products.length === 0 && (
-        <p style={{marginTop:"20px"}}>Chargement des produits...</p>
-      )}
+      {products.length === 0 && <p>Chargement...</p>}
 
-      <div
-        style={{
-          display:"grid",
-          gridTemplateColumns:"repeat(auto-fill,minmax(250px,1fr))",
-          gap:"25px",
-          marginTop:"20px"
-        }}
-      >
+      <div style={{
+        display:"grid",
+        gridTemplateColumns:"repeat(auto-fill,minmax(250px,1fr))",
+        gap:"20px",
+        marginTop:"20px"
+      }}>
 
         {products.map((product:any)=>(
 
-          <div
-            key={product.id}
-            style={{
-              background:"#fff",
-              padding:"15px",
-              borderRadius:"15px",
-              boxShadow:"0 10px 25px rgba(0,0,0,0.05)"
-            }}
-          >
+          <div key={product.id} style={{
+            background:"#fff",
+            padding:"15px",
+            borderRadius:"15px"
+          }}>
 
             <img
               src={product.image}
               width="100%"
-              style={{
-                height:"200px",
-                objectFit:"cover",
-                borderRadius:"10px"
-              }}
+              style={{height:"200px", objectFit:"cover"}}
             />
 
             <h3>{product.title}</h3>
 
-            <p style={{fontWeight:"bold", color:"#09b1ba"}}>
-              {product.price} FCFA
-            </p>
+            <p>{product.price} FCFA</p>
 
-            <button
-              onClick={()=>addToCart(product)}
-              style={{
-                marginTop:"10px",
-                padding:"10px",
-                width:"100%",
-                background:"#09b1ba",
-                color:"#fff",
-                border:"none",
-                borderRadius:"8px"
-              }}
-            >
+            <button onClick={()=>addToCart(product)}>
               Ajouter au panier
             </button>
 
