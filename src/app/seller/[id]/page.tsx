@@ -1,97 +1,75 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import Link from "next/link";
+import { useEffect, useState } from "react";
 
-export default function SellerPage() {
+export default function SellerPage(){
 
   const params = useParams();
-  const id = params.id as string;
+  const id = params?.id;
 
-  const [products, setProducts] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [products,setProducts] = useState<any[]>([]);
 
-  useEffect(() => {
+  useEffect(()=>{
 
-    fetch(process.env.NEXT_PUBLIC_API_URL + "/products")
-      .then(res => res.json())
-      .then(data => {
+    const data = JSON.parse(localStorage.getItem("products") || "[]");
 
-        const sellerProducts = data.filter(
-          (p:any) => p.userId === id
-        );
+    const product = data.find((p:any)=> p.id == id);
 
-        setProducts(sellerProducts);
-        setLoading(false);
+    if(product){
+      const sellerProducts = data.filter((p:any)=> p.sellerPhone === product.sellerPhone);
+      setProducts(sellerProducts);
+    }
 
-      });
+  },[id]);
 
-  }, [id]);
-
-  if (loading) {
-    return <p>Chargement...</p>;
+  if(products.length === 0){
+    return <p>Aucun vendeur trouvé</p>;
   }
 
-  return (
-    <div style={{ padding: 40 }}>
+  return(
 
-      <h1>Profil vendeur</h1>
+    <div style={{padding:"20px"}}>
 
-      <h2>Produits du vendeur</h2>
+      <h2>Profil vendeur</h2>
 
-      {products.length === 0 && (
-        <p>Aucun produit pour ce vendeur</p>
-      )}
+      <p><strong>Nom :</strong> {products[0].sellerName}</p>
+      <p><strong>Téléphone :</strong> {products[0].sellerPhone}</p>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill,250px)",
-          gap: 20,
-          marginTop: 20
-        }}
-      >
+      <h3>Produits du vendeur</h3>
 
-        {products.map(product => (
+      <div style={{
+        display:"grid",
+        gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",
+        gap:"15px",
+        marginTop:"20px"
+      }}>
 
-          <Link
-            key={product.id}
-            href={"/product/" + product.id}
-            style={{
-              border: "1px solid #eee",
-              borderRadius: 10,
-              textDecoration: "none",
-              color: "black",
-              overflow: "hidden"
-            }}
-          >
+        {products.map((product,index)=>(
+
+          <div key={index} style={{
+            background:"#fff",
+            padding:"10px",
+            borderRadius:"10px"
+          }}>
 
             <img
               src={product.image}
-              style={{
-                width: "100%",
-                height: 200,
-                objectFit: "cover"
-              }}
+              width="100%"
+              style={{height:"150px", objectFit:"cover"}}
             />
 
-            <div style={{ padding: 10 }}>
+            <p>{product.title}</p>
+            <p>{product.price} FCFA</p>
 
-              <h3>{product.title}</h3>
-
-              <p style={{ color:"#00a884", fontWeight:"bold" }}>
-                {product.price} FCFA
-              </p>
-
-            </div>
-
-          </Link>
+          </div>
 
         ))}
 
       </div>
 
     </div>
+
   );
+
 }
