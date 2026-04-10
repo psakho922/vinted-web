@@ -53,6 +53,9 @@ export default function ProductPage(){
 
     <div style={{padding:"20px"}}>
 
+      {/* 🔥 TEST VISUEL */}
+      <h1 style={{color:"red"}}>TEST PRODUIT</h1>
+
       <img
         src={product.image}
         width="300"
