@@ -2,19 +2,23 @@
 
 import { useEffect, useState } from "react";
 
-export default function PaiementPage(){
+export default function PanierPage(){
 
   const [cart,setCart] = useState<any[]>([]);
 
   useEffect(()=>{
-
     const data = JSON.parse(localStorage.getItem("cart") || "[]");
-
-    console.log("PANIER:", data); // 🔥 debug
-
     setCart(data);
-
   },[]);
+
+  const removeItem = (index:number) => {
+
+    let newCart = [...cart];
+    newCart.splice(index,1);
+
+    setCart(newCart);
+    localStorage.setItem("cart", JSON.stringify(newCart));
+  };
 
   const total = cart.reduce((sum,item)=> sum + Number(item.price || 0),0);
   const commission = Math.round(total * 0.1);
@@ -24,19 +28,69 @@ export default function PaiementPage(){
 
     <div style={{padding:"20px"}}>
 
-      <h2>Paiement</h2>
+      <h2>Mon panier</h2>
 
-      {/* 🔥 PRODUITS */}
+      {cart.length === 0 && <p>Panier vide</p>}
+
       {cart.map((item,index)=>(
-        <div key={index}>
-          <p>{item.title} - {item.price} FCFA</p>
+
+        <div
+          key={index}
+          style={{
+            display:"flex",
+            justifyContent:"space-between",
+            marginBottom:"10px",
+            background:"#fff",
+            padding:"10px",
+            borderRadius:"10px"
+          }}
+        >
+
+          <div>
+            <p>{item.title}</p>
+            <p>{item.price} FCFA</p>
+          </div>
+
+          <button onClick={()=>removeItem(index)}>
+            Supprimer
+          </button>
+
         </div>
+
       ))}
 
-      <p>Total : {total} FCFA</p>
-      <p>Commission : {commission} FCFA</p>
+      {cart.length > 0 && (
 
-      <h3>Total à payer : {finalTotal} FCFA</h3>
+        <div style={{marginTop:"20px"}}>
+
+          <p><strong>Total :</strong> {total} FCFA</p>
+
+          <p style={{color:"#09b1ba"}}>
+            <strong>Commission (10%) :</strong> {commission} FCFA
+          </p>
+
+          <h3>Total à payer : {finalTotal} FCFA</h3>
+
+          {/* 💳 BOUTON PAYER */}
+          <a href="/paiement">
+            <button
+              style={{
+                marginTop:"20px",
+                padding:"15px",
+                width:"100%",
+                background:"#09b1ba",
+                color:"#fff",
+                border:"none",
+                borderRadius:"10px"
+              }}
+            >
+              Payer
+            </button>
+          </a>
+
+        </div>
+
+      )}
 
     </div>
 
