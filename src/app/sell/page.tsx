@@ -1,4 +1,4 @@
- "use client";
+"use client";
 
 import { useState } from "react";
 
@@ -7,6 +7,8 @@ export default function SellPage(){
   const [title,setTitle] = useState("");
   const [price,setPrice] = useState("");
   const [image,setImage] = useState("");
+  const [name,setName] = useState("");
+  const [phone,setPhone] = useState("");
 
   const handleImage = (e:any) => {
 
@@ -29,7 +31,9 @@ export default function SellPage(){
       id: Date.now(),
       title,
       price,
-      image
+      image,
+      sellerName: name,
+      sellerPhone: phone
     };
 
     let products = JSON.parse(localStorage.getItem("products") || "[]");
@@ -43,6 +47,8 @@ export default function SellPage(){
     setTitle("");
     setPrice("");
     setImage("");
+    setName("");
+    setPhone("");
   };
 
   return(
@@ -65,7 +71,20 @@ export default function SellPage(){
         style={{display:"block", marginBottom:"10px", padding:"10px"}}
       />
 
-      {/* 📸 UPLOAD IMAGE */}
+      <input
+        placeholder="Ton nom"
+        value={name}
+        onChange={(e)=>setName(e.target.value)}
+        style={{display:"block", marginBottom:"10px", padding:"10px"}}
+      />
+
+      <input
+        placeholder="Numéro téléphone"
+        value={phone}
+        onChange={(e)=>setPhone(e.target.value)}
+        style={{display:"block", marginBottom:"10px", padding:"10px"}}
+      />
+
       <input
         type="file"
         accept="image/*"
@@ -74,11 +93,7 @@ export default function SellPage(){
       />
 
       {image && (
-        <img
-          src={image}
-          width="200"
-          style={{display:"block", marginBottom:"10px"}}
-        />
+        <img src={image} width="200" />
       )}
 
       <button onClick={handleSubmit}>
