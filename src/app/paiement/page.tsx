@@ -1,73 +1,85 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-export default function PaiementPage() {
+export default function PaiementPage(){
 
-  const router = useRouter();
+  const [cart,setCart] = useState<any[]>([]);
 
-  function confirmer() {
+  useEffect(()=>{
+    const data = JSON.parse(localStorage.getItem("cart") || "[]");
+    setCart(data);
+  },[]);
 
-    alert("Commande confirmée");
+  const total = cart.reduce((sum,item)=> sum + Number(item.price),0);
+  const commission = Math.round(total * 0.1);
+  const finalTotal = total + commission;
 
-    router.push("/commande/test");
+  const confirmerPaiement = () => {
 
-  }
+    let orders = JSON.parse(localStorage.getItem("orders") || "[]");
 
-  return (
+    const newOrder = {
+      total: finalTotal,
+      date: new Date().toLocaleString(),
+      status: "en attente"
+    };
 
-    <div style={{ padding: 40 }}>
+    orders.push(newOrder);
 
-      <h1>Paiement</h1>
+    localStorage.setItem("orders", JSON.stringify(orders));
 
-      <h2>Payer avec Wave ou Orange Money</h2>
+    localStorage.removeItem("cart");
 
-      <br/>
+    alert("Paiement enregistré ✅ (en attente de confirmation)");
 
-      <p>📱 Numéro Wave :</p>
+    window.location.href = "/commande";
+  };
 
-      <h3>77 353 66 13</h3>
+  return(
 
-      <br/>
+    <div style={{padding:"20px"}}>
 
-      <p>📱 Numéro Orange Money :</p>
+      <h2>Paiement</h2>
 
-      <h3>77 353 66 13</h3>
+      <p>Total : {total} FCFA</p>
+      <p>Commission : {commission} FCFA</p>
 
-      <br/>
+      <h3>Total à payer : {finalTotal} FCFA</h3>
 
-      <p>Nom du compte :</p>
+      {/* 💳 INFOS PAIEMENT */}
+      <div style={{
+        marginTop:"20px",
+        padding:"15px",
+        background:"#fff",
+        borderRadius:"10px"
+      }}>
 
-      <h3>Bibani Boutique</h3>
+        <h3>Paiement Mobile Money</h3>
 
-      <br/>
+        <p><strong>Wave :</strong> 77 123 45 67</p>
+        <p><strong>Orange Money :</strong> 77 123 45 67</p>
 
-      <p>
-        1️⃣ Ouvre Wave ou Orange Money  
-      </p>
+        <p style={{marginTop:"10px"}}>
+          👉 Envoyez le montant exact puis cliquez sur “J’ai payé”
+        </p>
 
-      <p>
-        2️⃣ Envoie le montant du produit  
-      </p>
+      </div>
 
-      <p>
-        3️⃣ Clique sur confirmer après paiement  
-      </p>
-
-      <br/>
-
+      {/* ✅ CONFIRMATION */}
       <button
-        onClick={confirmer}
+        onClick={confirmerPaiement}
         style={{
-          padding: 15,
-          background: "green",
-          color: "white",
-          border: "none",
-          borderRadius: 5,
-          fontSize: 16
+          marginTop:"20px",
+          padding:"15px",
+          background:"#09b1ba",
+          color:"#fff",
+          border:"none",
+          borderRadius:"10px",
+          width:"100%"
         }}
       >
-        J'ai payé
+        J’ai payé
       </button>
 
     </div>
