@@ -25,29 +25,36 @@ export default function ProductPage(){
 
     <div style={{padding:"20px"}}>
 
-      {/* 🔥 TEST */}
-      <h1 style={{color:"red"}}>PAGE PRODUIT</h1>
-
       <img src={product.image} width="300" />
 
       <h2>{product.title}</h2>
-      <p>{product.price} FCFA</p>
 
-      {/* 👤 INFOS VENDEUR */}
-      <p>Vendeur : {product.sellerName}</p>
-      <p>Téléphone : {product.sellerPhone}</p>
+      <p style={{fontWeight:"bold", color:"#09b1ba"}}>
+        {product.price} FCFA
+      </p>
 
-      {/* 🔥 BOUTON PROFIL */}
+      {/* 👤 VENDEUR */}
+      <div style={{
+        marginTop:"10px",
+        background:"#f5f5f5",
+        padding:"10px",
+        borderRadius:"10px"
+      }}>
+        <p><strong>Vendeur :</strong> {product.sellerName || "Non défini"}</p>
+        <p><strong>Téléphone :</strong> {product.sellerPhone || "Non défini"}</p>
+      </div>
+
+      {/* 🔗 PROFIL VENDEUR */}
       <div style={{marginTop:"20px"}}>
         <Link href={"/seller/" + product.id}>
           <button style={{
-            padding:"15px",
-            background:"blue",
+            padding:"10px",
+            background:"#000",
             color:"#fff",
             border:"none",
-            borderRadius:"10px"
+            borderRadius:"8px"
           }}>
-            PROFIL VENDEUR
+            Voir profil vendeur
           </button>
         </Link>
       </div>
