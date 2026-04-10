@@ -15,7 +15,7 @@ export default function ProductPage(){
 
     const products = JSON.parse(localStorage.getItem("products") || "[]");
 
-    const found = products.find((p:any)=>p.id == id);
+    const found = products.find((p:any)=> p.id == id);
 
     setProduct(found);
 
@@ -36,7 +36,7 @@ export default function ProductPage(){
 
     let products = JSON.parse(localStorage.getItem("products") || "[]");
 
-    const updated = products.filter((p:any)=>p.id != product.id);
+    const updated = products.filter((p:any)=> p.id != product.id);
 
     localStorage.setItem("products", JSON.stringify(updated));
 
@@ -53,9 +53,6 @@ export default function ProductPage(){
 
     <div style={{padding:"20px"}}>
 
-      {/* 🔥 TEST VISUEL */}
-      <h1 style={{color:"red"}}>TEST PRODUIT</h1>
-
       <img
         src={product.image}
         width="300"
@@ -67,6 +64,17 @@ export default function ProductPage(){
       <p style={{fontWeight:"bold", color:"#09b1ba"}}>
         {product.price} FCFA
       </p>
+
+      {/* 👤 INFOS VENDEUR */}
+      <div style={{
+        marginTop:"15px",
+        padding:"10px",
+        background:"#f5f5f5",
+        borderRadius:"10px"
+      }}>
+        <p><strong>Vendeur :</strong> {product.sellerName || "Non défini"}</p>
+        <p><strong>Téléphone :</strong> {product.sellerPhone || "Non défini"}</p>
+      </div>
 
       {/* 🛒 ACHETER */}
       <button
@@ -101,14 +109,16 @@ export default function ProductPage(){
 
       {/* 👤 PROFIL VENDEUR */}
       <div style={{marginTop:"20px"}}>
-        <Link href="/profil">
-          <button style={{
-            padding:"10px",
-            background:"#000",
-            color:"#fff",
-            border:"none",
-            borderRadius:"8px"
-          }}>
+        <Link href={"/seller/" + product.id}>
+          <button
+            style={{
+              padding:"10px",
+              background:"#000",
+              color:"#fff",
+              border:"none",
+              borderRadius:"8px"
+            }}
+          >
             Voir profil vendeur
           </button>
         </Link>
