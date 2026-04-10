@@ -57,8 +57,8 @@ export default function PaiementPage(){
 
         <h3>Paiement Mobile Money</h3>
 
-        <p><strong>Wave :</strong> 77 123 45 67</p>
-        <p><strong>Orange Money :</strong> 77 123 45 67</p>
+        <p><strong>Wave :</strong> 77 353 66 13</p>
+        <p><strong>Orange Money :</strong> 77 353 66 13</p>
 
         <p style={{marginTop:"10px"}}>
           👉 Envoyez le montant exact puis cliquez sur “J’ai payé”
