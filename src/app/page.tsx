@@ -8,22 +8,24 @@ export default function HomePage(){
 
   useEffect(()=>{
 
-    // ⚡ Charger localStorage
-    const local = JSON.parse(localStorage.getItem("products") || "[]");
+    // 🧠 1. Produits ajoutés depuis SELL
+    const localProducts = JSON.parse(localStorage.getItem("products") || "[]");
 
-    if(local.length > 0){
-      setProducts(local);
-    }
-
-    // 🌐 Charger API
+    // 🌐 2. Produits API
     fetch("https://vinted-api-clean.onrender.com/products")
       .then(res=>res.json())
-      .then(data=>{
-        setProducts(data);
-        localStorage.setItem("products", JSON.stringify(data));
+      .then(apiProducts=>{
+
+        // 🔥 fusionner API + local
+        const allProducts = [...localProducts, ...apiProducts];
+
+        setProducts(allProducts);
       })
       .catch(err=>{
         console.log(err);
+
+        // ⚠️ si API échoue → afficher local seulement
+        setProducts(localProducts);
       });
 
   },[]);
@@ -45,16 +47,16 @@ export default function HomePage(){
         marginTop:"20px"
       }}>
 
-        {products.map((product:any)=>(
+        {products.map((product:any, index:number)=>(
 
-          <div key={product.id} style={{
+          <div key={index} style={{
             background:"#fff",
             padding:"15px",
             borderRadius:"15px"
           }}>
 
             <img
-              src={product.image}
+              src={product.image || "https://via.placeholder.com/300"}
               width="100%"
               style={{height:"200px", objectFit:"cover"}}
             />
