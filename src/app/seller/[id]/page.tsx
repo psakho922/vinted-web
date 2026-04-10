@@ -17,7 +17,9 @@ export default function SellerPage(){
     const product = data.find((p:any)=> p.id == id);
 
     if(product){
-      const sellerProducts = data.filter((p:any)=> p.sellerPhone === product.sellerPhone);
+      const sellerProducts = data.filter(
+        (p:any)=> p.sellerPhone === product.sellerPhone
+      );
       setProducts(sellerProducts);
     }
 
