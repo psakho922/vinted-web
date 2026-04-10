@@ -8,25 +8,9 @@ export default function HomePage(){
 
   useEffect(()=>{
 
-    // 🧠 1. Produits ajoutés depuis SELL
-    const localProducts = JSON.parse(localStorage.getItem("products") || "[]");
+    const data = JSON.parse(localStorage.getItem("products") || "[]");
 
-    // 🌐 2. Produits API
-    fetch("https://vinted-api-clean.onrender.com/products")
-      .then(res=>res.json())
-      .then(apiProducts=>{
-
-        // 🔥 fusionner API + local
-        const allProducts = [...localProducts, ...apiProducts];
-
-        setProducts(allProducts);
-      })
-      .catch(err=>{
-        console.log(err);
-
-        // ⚠️ si API échoue → afficher local seulement
-        setProducts(localProducts);
-      });
+    setProducts(data);
 
   },[]);
 
@@ -37,7 +21,7 @@ export default function HomePage(){
       <h1>Marketplace</h1>
 
       {products.length === 0 && (
-        <p>Chargement des produits...</p>
+        <p>Aucun produit pour le moment</p>
       )}
 
       <div style={{
