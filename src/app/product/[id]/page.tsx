@@ -2,6 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 export default function ProductPage(){
 
@@ -12,12 +13,11 @@ export default function ProductPage(){
 
   useEffect(()=>{
 
-    fetch("https://vinted-api-clean.onrender.com/products")
-      .then(res=>res.json())
-      .then(data=>{
-        const found = data.find((p:any)=>p.id == id);
-        setProduct(found);
-      });
+    const products = JSON.parse(localStorage.getItem("products") || "[]");
+
+    const found = products.find((p:any)=>p.id == id);
+
+    setProduct(found);
 
   },[id]);
 
@@ -46,7 +46,7 @@ export default function ProductPage(){
   };
 
   if(!product){
-    return <p>Chargement...</p>;
+    return <p>Produit introuvable</p>;
   }
 
   return(
@@ -61,14 +61,16 @@ export default function ProductPage(){
 
       <h2>{product.title}</h2>
 
-      <p>{product.price} FCFA</p>
+      <p style={{fontWeight:"bold", color:"#09b1ba"}}>
+        {product.price} FCFA
+      </p>
 
       {/* 🛒 ACHETER */}
       <button
         onClick={addToCart}
         style={{
-          marginTop:"10px",
-          padding:"10px",
+          marginTop:"15px",
+          padding:"12px",
           background:"#09b1ba",
           color:"#fff",
           border:"none",
@@ -83,8 +85,8 @@ export default function ProductPage(){
       <button
         onClick={deleteProduct}
         style={{
-          marginTop:"10px",
-          padding:"10px",
+          marginTop:"15px",
+          padding:"12px",
           background:"red",
           color:"#fff",
           border:"none",
@@ -93,6 +95,21 @@ export default function ProductPage(){
       >
         Supprimer
       </button>
+
+      {/* 👤 PROFIL VENDEUR */}
+      <div style={{marginTop:"20px"}}>
+        <Link href="/profil">
+          <button style={{
+            padding:"10px",
+            background:"#000",
+            color:"#fff",
+            border:"none",
+            borderRadius:"8px"
+          }}>
+            Voir profil vendeur
+          </button>
+        </Link>
+      </div>
 
     </div>
 
