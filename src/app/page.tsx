@@ -1,19 +1,30 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 
 export default function Home(){
 
   const [products,setProducts] = useState<any[]>([]);
+  const [loading,setLoading] = useState(true);
 
   useEffect(()=>{
 
     fetch("/products.json")
       .then(res => res.json())
-      .then(data => setProducts(data));
+      .then(data => {
+        setProducts(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.log("Erreur :", err);
+        setLoading(false);
+      });
 
   },[]);
+
+  if(loading){
+    return <p style={{padding:"20px"}}>Chargement...</p>;
+  }
 
   return(
 
@@ -23,24 +34,12 @@ export default function Home(){
 
       {products.length === 0 && <p>Aucun produit</p>}
 
-      <div style={{display:"grid", gap:"20px"}}>
-
-        {products.map((product)=>(
-          <div key={product.id}>
-
-            <img src={product.image} width="200" />
-
-            <h3>{product.title}</h3>
-            <p>{product.price} FCFA</p>
-
-            <Link href={"/product/" + product.id}>
-              <button>Voir produit</button>
-            </Link>
-
-          </div>
-        ))}
-
-      </div>
+      {products.map((p)=>(
+        <div key={p.id} style={{marginBottom:"20px"}}>
+          <p>{p.title}</p>
+          <p>{p.price} FCFA</p>
+        </div>
+      ))}
 
     </div>
 
