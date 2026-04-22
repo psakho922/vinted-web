@@ -3,32 +3,8 @@
     "id": 1,
     "title": "Sac à main",
     "price": 5000,
-    "image": "https://via.placeholder.com/300",
+    "image": "https://picsum.photos/300",
     "sellerName": "Penda",
     "sellerPhone": "771234567"
-  },
-  {
-    "id": 2,
-    "title": "Chaussures Nike",
-    "price": 15000,
-    "image": "https://via.placeholder.com/300",
-    "sellerName": "Awa",
-    "sellerPhone": "770000000"
-  },
-  {
-    "id": 3,
-    "title": "Montre élégante",
-    "price": 7000,
-    "image": "https://via.placeholder.com/300",
-    "sellerName": "Ali",
-    "sellerPhone": "771111111"
-  },
-  {
-    "id": 4,
-    "title": "T-shirt fashion",
-    "price": 3000,
-    "image": "https://via.placeholder.com/300",
-    "sellerName": "Fatou",
-    "sellerPhone": "772222222"
   }
 ]
