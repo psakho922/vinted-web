@@ -8,6 +8,22 @@ export default function SellPage(){
   const [price,setPrice] = useState("");
   const [image,setImage] = useState("");
 
+  // convertir image en base64
+  const handleImage = (e:any) => {
+
+    const file = e.target.files[0];
+
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setImage(reader.result as string);
+    };
+
+    if(file){
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = () => {
 
     const newProduct = {
@@ -23,7 +39,7 @@ export default function SellPage(){
 
     localStorage.setItem("products", JSON.stringify(products));
 
-    alert("Produit ajouté 🔥");
+    alert("Produit publié 🔥");
 
     setTitle("");
     setPrice("");
@@ -40,24 +56,26 @@ export default function SellPage(){
         placeholder="Nom produit"
         value={title}
         onChange={(e)=>setTitle(e.target.value)}
-        style={{display:"block", marginBottom:"10px"}}
       />
 
       <input
         placeholder="Prix"
         value={price}
         onChange={(e)=>setPrice(e.target.value)}
-        style={{display:"block", marginBottom:"10px"}}
       />
 
-      <input
-        placeholder="Lien image (optionnel)"
-        value={image}
-        onChange={(e)=>setImage(e.target.value)}
-        style={{display:"block", marginBottom:"10px"}}
-      />
+      {/* UPLOAD IMAGE */}
+      <input type="file" accept="image/*" onChange={handleImage} />
 
-      <button onClick={handleSubmit}>
+      {/* PREVIEW */}
+      {image && (
+        <img
+          src={image}
+          style={{width:"200px", marginTop:"10px"}}
+        />
+      )}
+
+      <button onClick={handleSubmit} style={{display:"block", marginTop:"10px"}}>
         Publier
       </button>
 
