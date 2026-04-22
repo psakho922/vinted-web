@@ -1,10 +1,18 @@
 [
   {
-    "id": 1,
-    "title": "Sac à main",
-    "price": 5000,
+    "id": 1775782839070,
+    "title": "jogging",
+    "price": 4000,
     "image": "https://picsum.photos/300",
     "sellerName": "Penda",
     "sellerPhone": "771234567"
+  },
+  {
+    "id": 1775782839071,
+    "title": "Produit 2",
+    "price": 6000,
+    "image": "https://picsum.photos/301",
+    "sellerName": "Ali",
+    "sellerPhone": "770000000"
   }
 ]
