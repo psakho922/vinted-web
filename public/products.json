@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "title": "Sac à main",
+    "price": 5000,
+    "image": "https://via.placeholder.com/300",
+    "sellerName": "Penda",
+    "sellerPhone": "771234567"
+  },
+  {
+    "id": 2,
+    "title": "Chaussures",
+    "price": 8000,
+    "image": "https://via.placeholder.com/300",
+    "sellerName": "Awa",
+    "sellerPhone": "770000000"
+  }
+]
